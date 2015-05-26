@@ -8,6 +8,7 @@
         <link rel="stylesheet" href="/static_assets/css/bootstrap.min.css">
         <link rel="stylesheet" href="/static_assets/css/bootstrap-theme.min.css">
         {% block page_css %}{% end %}
+        <link rel="stylesheet" href="/colony/static/css/colony.css">
     </head>
     <body>
         {% block menu %}{% end %}
@@ -17,7 +18,7 @@
             <div class="container">
                 <div class="row">
                     <div class="span12 text-center">
-                        <h1>Welcome to Social Spider net</h1>
+                        <h1>Welcome to {{ web_name }}</h1>
                         <h3>Social Networking with <em>actual</em> privacy</h3>
                     </div>
                 </div>
@@ -38,5 +39,11 @@
 
         {% block ejs %}{% end %}
         {% block page_js %}{% end %}
+        <footer class="blog-footer">
+            <p>Colony:{{ colony_name }}</p>
+            <p>
+                <a href="#">Back to top</a>
+            </p>
+    </footer>
     </body>
 </html>
