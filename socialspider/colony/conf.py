@@ -23,11 +23,17 @@ def parse_component_config(config):
     """ Basic configuration used by the admin component is:"""
     colony_config = {
         'table_prefix': 's2',
-        'connection_instance': 's2',
+        'connection_instance': 's2platform',
         'colonies': {},
         'webs': {}
     }
     if config.has_section('Colony'):
+        if config.has_option('Colony', 'data.connection.instance'):
+            colony_config['connection_instance'] = config.get(
+                'Colony',
+                'data.connection.instance'
+            )
+
         colony_items = config.items('Colony')
         for key, value in colony_items:
             # Getting configured colonies
