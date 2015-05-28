@@ -23,7 +23,6 @@ class ColonyComponent(IfluxComponent):
 
     def process_config(self):
         self.colonies = self.config['colonies']
-<<<<<<< HEAD
         self.webs = self.config['webs']
 
     def install(self):
@@ -68,6 +67,4 @@ class ColonyComponent(IfluxComponent):
         return self.application.get_connection_handler(
             self.config['connection_instance']
         )
-=======
         self.webs = self.config['webs']
->>>>>>> 5a5381c9b60bc0d2a4b677038b196b64400ba9af
