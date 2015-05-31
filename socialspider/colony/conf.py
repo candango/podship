@@ -15,8 +15,8 @@
 
 def get_component_config_file():
     """ The configuration file used on the administrator component is
-        colony.ini. """
-    return "colony.ini"
+        web.ini. """
+    return "web.ini"
 
 
 def parse_component_config(config):
