@@ -1,6 +1,6 @@
 # Social Spider
 
-** A Ligthwight, Open Source, Privacy-aware and Distributed Social Network platform **
+**A Ligthwight, Open Source, Privacy-aware and Distributed Social Network platform**
 
 ## Objectve
 
