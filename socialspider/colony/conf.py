@@ -1,4 +1,6 @@
-# Copyright 2013-2014 Flavio Garcia
+#!/usr/bin/env python
+#
+# Copyright 2015 Flavio Garcia
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -11,12 +13,14 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+#
+# vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4:
 
 
 def get_component_config_file():
     """ The configuration file used on the administrator component is
         web.ini. """
-    return "web.ini"
+    return "colony.ini"
 
 
 def parse_component_config(config):
