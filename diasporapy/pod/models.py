@@ -695,6 +695,66 @@ class RoleBase(Base):
     updated_at = Column('updated_at', TIMESTAMP(), nullable=False)
 
 
+class SchemaMigrationBase(Base):
+
+    __tablename__ = 'schema_migrations'
+
+    # On diaspora* this table has no pk!
+    id = Column('id', Integer(), primary_key=True)
+    version = Column('version', String(255), nullable=False)
+
+Index('idx_schema_migrations_version', SchemaMigrationBase.version,
+      unique=True, postgresql_using='btree')
+
+
+class ServiceBase(Base):
+
+    __tablename__ = 'services'
+
+    id = Column('id', Integer(), primary_key=True)
+    type = Column('type', String(127), nullable=False)
+    user_id = Column('user_id', Integer(), ForeignKey('users.id'),
+                     nullable=False)
+    uid = Column('uid', String(127), nullable=True)
+    access_token = Column('access_token', String(255), nullable=True)
+    access_secret = Column('access_secret', String(255), nullable=True)
+    nickname = Column('nickname', String(255), nullable=True)
+    created_at = Column('created_at', TIMESTAMP(), nullable=False)
+    updated_at = Column('updated_at', TIMESTAMP(), nullable=False)
+
+Index('idx_services_type_uid', ServiceBase.type, ServiceBase.uid,
+      postgresql_using='btree')
+Index('idx_services_user_id', ServiceBase.user_id, postgresql_using='btree')
+
+
+class ShareVisibilityBase(Base):
+
+    __tablename__ = 'share_visibilities'
+
+    id = Column('id', Integer(), primary_key=True)
+    shareable_id = Column('shareable_id', Integer(), nullable=False)
+    created_at = Column('created_at', TIMESTAMP(), nullable=False)
+    updated_at = Column('updated_at', TIMESTAMP(), nullable=False)
+    hidden = Column('hidden', Boolean(), DefaultClause('false'),
+                    nullable=False)
+    contact_id = Column('contact_id', Integer(), ForeignKey('contacts.id'),
+                        nullable=False)
+    shareable_type = Column('shareable_type', String(60),
+                            DefaultClause('Post'), nullable=False)
+
+Index('idx_share_visibilities_contact_id', ShareVisibilityBase.contact_id,
+      postgresql_using='btree')
+Index('idx_share_visibilities_shareable_id', ShareVisibilityBase.shareable_id,
+      postgresql_using='btree')
+Index('idx_share_visibilities_shareable_id_shareable_type_contact_id',
+      ShareVisibilityBase.shareable_id, ShareVisibilityBase.shareable_type,
+      ShareVisibilityBase.contact_id, postgresql_using='btree')
+Index('idx_share_visibilities_shareable_id_shareable_type_hidden_conta',
+      ShareVisibilityBase.shareable_id, ShareVisibilityBase.shareable_type,
+      ShareVisibilityBase.hidden, ShareVisibilityBase.contact_id,
+      postgresql_using='btree')
+
+
 # TODO: Follow that doc
 # http://stackoverflow.com/questions/6151084/which-timestamp-type-should-i-choose-in-a-postgresql-database
 # http://stackoverflow.com/questions/13677781/getting-sqlalchemy-to-issue-create-schema-on-create-all
