@@ -25,6 +25,81 @@ from sqlalchemy.dialects.postgres import TIMESTAMP
 from firenado.util.sqlalchemy_util import Base
 
 
+class AccountDeletionBase(Base):
+
+    __tablename__ = 'account_deletions'
+
+    id = Column('id', Integer(), primary_key=True)
+    diaspora_handle = Column('diaspora_handle', String(255), nullable=False)
+    person_id = Column('person_id', Integer(), nullable=True)
+    completed_at = Column('completed_at', TIMESTAMP(), nullable=False)
+
+
+class AspectMembershipBase(Base):
+
+    __tablename__ = 'aspect_memberships'
+
+    id = Column('id', Integer(), primary_key=True)
+    aspect_id = Column('aspect_id', Integer(), ForeignKey('aspects.id'),
+                       nullable=False)
+    contact_id = Column('contact_id', Integer(), ForeignKey('contacts.id'),
+                        nullable=False)
+    created_at = Column('created_at', TIMESTAMP(), nullable=False)
+    updated_at = Column('updated_at', TIMESTAMP(), nullable=False)
+
+Index('idx_aspect_memberships_aspect_id_contact_id',
+      AspectMembershipBase.aspect_id, AspectMembershipBase.contact_id,
+      unique=True)
+Index('idx_aspect_memberships_aspect_id', AspectMembershipBase.aspect_id,
+      postgresql_using='btree')
+Index('idx_aspect_memberships_contact_id', AspectMembershipBase.contact_id,
+      postgresql_using='btree')
+
+
+class AspectVisibilityBase(Base):
+
+    __tablename__ = 'aspect_visibilities'
+
+    id = Column('id', Integer(), primary_key=True)
+    shareable_id = Column('shareable_id', Integer(), nullable=False)
+    aspect_id = Column('aspect_id', Integer(), ForeignKey('aspects.id'),
+                       nullable=False)
+    created_at = Column('created_at', TIMESTAMP(), nullable=False)
+    updated_at = Column('updated_at', TIMESTAMP(), nullable=False)
+    shareable_type = Column('shareable_type', String(255),
+                            DefaultClause('Post'), nullable=False)
+
+Index('idx_aspect_visibilities_aspect_id', AspectVisibilityBase.aspect_id,
+      postgresql_using='btree')
+Index('idx_aspect_visibilities_shareable_id_shareable_type',
+      AspectVisibilityBase.shareable_id, AspectVisibilityBase.shareable_type,
+      postgresql_using='btree')
+Index('idx_aspect_visibilities_shareable_id_shareable_type_aspect_id',
+      AspectVisibilityBase.shareable_id, AspectVisibilityBase.shareable_type,
+      AspectVisibilityBase.aspect_id, postgresql_using='btree')
+
+
+class AspectBase(Base):
+
+    __tablename__ = 'aspects'
+
+    id = Column('id', Integer(), primary_key=True)
+    name = Column('name', String(255), nullable=False)
+    # TODO: Diaspora don't set this as FK. Why?
+    user_id = Column('user_id', Integer(), nullable=False)
+    created_at = Column('created_at', TIMESTAMP(), nullable=False)
+    updated_at = Column('updated_at', TIMESTAMP(), nullable=False)
+    contacts_visible = Column('contacts_visible', Boolean(),
+                              DefaultClause('True'), nullable=False)
+    order_id = Column('order_id', Integer(), nullable=True)
+    chat_enabled = Column('chat_enabled', Boolean(),
+                          DefaultClause('False'), nullable=True)
+
+Index('idx_aspects_user_id', AspectBase.user_id, postgresql_using='btree')
+Index('idx_aspects_user_id_contacts_visible', AspectBase.user_id,
+      AspectBase.contacts_visible, postgresql_using='btree')
+
+
 # TODO: Follow that doc
 # http://stackoverflow.com/questions/6151084/which-timestamp-type-should-i-choose-in-a-postgresql-database
 # http://stackoverflow.com/questions/13677781/getting-sqlalchemy-to-issue-create-schema-on-create-all
@@ -157,80 +232,6 @@ class TagBase(Base):
     taggings_count = Column('taggings_count', Integer(), DefaultClause('0'),
                             nullable=False)
 
-
-class AccountDeletionBase(Base):
-
-    __tablename__ = 'account_deletions'
-
-    id = Column('id', Integer(), primary_key=True)
-    diaspora_handle = Column('diaspora_handle', String(255), nullable=False)
-    person_id = Column('person_id', Integer(), nullable=True)
-    completed_at = Column('completed_at', TIMESTAMP(), nullable=False)
-
-
-class AspectMembershipBase(Base):
-
-    __tablename__ = 'aspect_memberships'
-
-    id = Column('id', Integer(), primary_key=True)
-    aspect_id = Column('aspect_id', Integer(), ForeignKey('aspects.id'),
-                       nullable=False)
-    contact_id = Column('contact_id', Integer(), ForeignKey('contacts.id'),
-                        nullable=False)
-    created_at = Column('created_at', TIMESTAMP(), nullable=False)
-    updated_at = Column('updated_at', TIMESTAMP(), nullable=False)
-
-Index('idx_aspect_memberships_aspect_id_contact_id',
-      AspectMembershipBase.aspect_id, AspectMembershipBase.contact_id,
-      unique=True)
-Index('idx_aspect_memberships_aspect_id', AspectMembershipBase.aspect_id,
-      postgresql_using='btree')
-Index('idx_aspect_memberships_contact_id', AspectMembershipBase.contact_id,
-      postgresql_using='btree')
-
-
-class AspectVisibilityBase(Base):
-
-    __tablename__ = 'aspect_visibilities'
-
-    id = Column('id', Integer(), primary_key=True)
-    shareable_id = Column('shareable_id', Integer(), nullable=False)
-    aspect_id = Column('aspect_id', Integer(), ForeignKey('aspects.id'),
-                       nullable=False)
-    created_at = Column('created_at', TIMESTAMP(), nullable=False)
-    updated_at = Column('updated_at', TIMESTAMP(), nullable=False)
-    shareable_type = Column('shareable_type', String(255),
-                            DefaultClause('Post'), nullable=False)
-
-Index('aspect_visibilities_aspect_id_idx', AspectVisibilityBase.aspect_id,
-      postgresql_using='btree')
-Index('aspect_visibilities_shareable_id_shareable_type_idx',
-      AspectVisibilityBase.shareable_id, AspectVisibilityBase.shareable_type,
-      postgresql_using='btree')
-Index('aspect_visibilities_shareable_id_shareable_type_aspect_id_idx',
-      AspectVisibilityBase.shareable_id, AspectVisibilityBase.shareable_type,
-      AspectVisibilityBase.aspect_id, postgresql_using='btree')
-
-
-class AspectBase(Base):
-
-    __tablename__ = 'aspects'
-
-    id = Column('id', Integer(), primary_key=True)
-    name = Column('name', String(255), nullable=False)
-    # TODO: Diaspora don't set this as FK. Why?
-    user_id = Column('user_id', Integer(), nullable=False)
-    created_at = Column('created_at', TIMESTAMP(), nullable=False)
-    updated_at = Column('updated_at', TIMESTAMP(), nullable=False)
-    contacts_visible = Column('contacts_visible', Boolean(),
-                              DefaultClause('True'), nullable=False)
-    order_id = Column('order_id', Integer(), nullable=True)
-    chat_enabled = Column('chat_enabled', Boolean(),
-                          DefaultClause('False'), nullable=True)
-
-Index('idx_aspects_user_id', AspectBase.user_id, postgresql_using='btree')
-Index('idx_aspects_user_id_contacts_visible', AspectBase.user_id,
-      AspectBase.contacts_visible, postgresql_using='btree')
 
 class BlockBase(Base):
 
