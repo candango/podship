@@ -444,6 +444,33 @@ Index('idx_participations_target_id_target_type_author_id',
       Participation.author_id, postgresql_using='btree')
 
 
+class PersonBase(Base):
+
+    __tablename__ = 'people'
+
+    id = Column('id', Integer(), primary_key=True)
+    guid = Column('guid', String(255), nullable=False)
+    url = Column('url', Text, nullable=False)
+    diaspora_handle = Column('diaspora_handle', String(255),
+                             nullable=False)
+    serialized_public_key = Column('serialized_public_key', Text,
+                                   nullable=False)
+    owner_id = Column('owner_id', Integer(), nullable=True)
+    created_at = Column('created_at', TIMESTAMP(), nullable=False)
+    updated_at = Column('updated_at', TIMESTAMP(), nullable=False)
+    closed_account = Column('closed_account', Boolean(),
+                            DefaultClause('False'),nullable=True)
+    fetch_status = Column('fetch_status', Integer(), DefaultClause('0'),
+                          nullable=True)
+
+Index('idx_people_diaspora_handle', PersonBase.diaspora_handle, unique=True,
+      postgresql_using='btree')
+Index('idx_people_guid', PersonBase.guid, unique=True,
+      postgresql_using='btree')
+Index('idx_people_owner_id', PersonBase.owner_id, unique=True,
+      postgresql_using='btree')
+
+
 # TODO: Follow that doc
 # http://stackoverflow.com/questions/6151084/which-timestamp-type-should-i-choose-in-a-postgresql-database
 # http://stackoverflow.com/questions/13677781/getting-sqlalchemy-to-issue-create-schema-on-create-all
@@ -530,26 +557,6 @@ class UserPreferenceBase(Base):
     user_id = Column('user_id', Integer(), ForeignKey('users.id'), nullable=True)
     created_at = Column('created_at', TIMESTAMP(), nullable=False)
     updated_at = Column('updated_at', TIMESTAMP(), nullable=False)
-
-
-class PeopleBase(Base):
-
-    __tablename__ = 'people'
-
-    id = Column('id', Integer(), primary_key=True)
-    guid = Column('guid', String(255), nullable=False)
-    url = Column('url', Text, nullable=False)
-    diaspora_handle = Column('diaspora_handle', String(255),
-                             nullable=False)
-    serialized_public_key = Column('serialized_public_key', Text,
-                                   nullable=False)
-    owner_id = Column('owner_id', Integer(), nullable=True)
-    created_at = Column('created_at', TIMESTAMP(), nullable=False)
-    updated_at = Column('updated_at', TIMESTAMP(), nullable=False)
-    closed_account = Column('closed_account', Boolean(),
-                            DefaultClause('False'),nullable=True)
-    fetch_status = Column('fetch_status', Integer(), DefaultClause('0'),
-                          nullable=True)
 
 
 class TagBase(Base):
