@@ -149,6 +149,34 @@ class ChatOfflineMessageBase(Base):
     created_at = Column('created_at', TIMESTAMP(), nullable=False)
 
 
+class CommentBase(Base):
+
+    __tablename__ = 'comments'
+
+    id = Column('id', Integer(), primary_key=True)
+    text = Column('text', Text(), nullable=False)
+    commentable_id = Column('commentable_id', Integer(), nullable=False)
+    author_id = Column('author_id', Integer(), ForeignKey('people.id'),
+                       nullable=False)
+    guid = Column('guid', String(255), nullable=False)
+    author_signature = Column('author_signature', Text(), nullable=True)
+    parent_author_signature = Column('parent_author_signature', Text(),
+                                     nullable=True)
+    created_at = Column('created_at', TIMESTAMP(), nullable=False)
+    updated_at = Column('updated_at', TIMESTAMP(), nullable=False)
+    likes_count = Column('likes_count', Integer(), DefaultClause('0'),
+                         nullable=False)
+    commentable_type = Column('commentable_type', String(60),
+                              DefaultClause('Post'), nullable=False)
+
+Index('idx_comments_guid', CommentBase.guid, unique=True)
+Index('idx_comments_author_id', CommentBase.author_id,
+      postgresql_using='btree')
+Index('idx_comments_commentable_id_commentable_type',
+      CommentBase.commentable_id, CommentBase.commentable_type,
+      postgresql_using='btree')
+
+
 # TODO: Follow that doc
 # http://stackoverflow.com/questions/6151084/which-timestamp-type-should-i-choose-in-a-postgresql-database
 # http://stackoverflow.com/questions/13677781/getting-sqlalchemy-to-issue-create-schema-on-create-all
