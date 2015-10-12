@@ -100,6 +100,15 @@ Index('idx_aspects_user_id_contacts_visible', AspectBase.user_id,
       AspectBase.contacts_visible, postgresql_using='btree')
 
 
+class BlockBase(Base):
+
+    __tablename__ = 'blocks'
+
+    id = Column('id', Integer(), primary_key=True)
+    user_id = Column('user_id', Integer(), nullable=True)
+    person_id = Column('person_id', Integer(), nullable=True)
+
+
 # TODO: Follow that doc
 # http://stackoverflow.com/questions/6151084/which-timestamp-type-should-i-choose-in-a-postgresql-database
 # http://stackoverflow.com/questions/13677781/getting-sqlalchemy-to-issue-create-schema-on-create-all
@@ -231,12 +240,3 @@ class TagBase(Base):
     name = Column('name', String(255), nullable=False)
     taggings_count = Column('taggings_count', Integer(), DefaultClause('0'),
                             nullable=False)
-
-
-class BlockBase(Base):
-
-    __tablename__ = 'blocks'
-
-    id = Column('id', Integer(), primary_key=True)
-    user_id = Column('user_id', Integer(), nullable=False)
-    person_id = Column('person_id', Integer(), nullable=False)
