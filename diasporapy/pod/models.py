@@ -515,6 +515,59 @@ class PodBase(Base):
     updated_at = Column('updated_at', TIMESTAMP(), nullable=False)
 
 
+class PollAnswerBase(Base):
+
+    __tablename__ = 'poll_answers'
+
+    id = Column('id', Integer(), primary_key=True)
+    answer = Column('answer', String(255), nullable=False)
+    # TODO:  poll_id not FK ?
+    poll_id = Column('poll_id', Integer(), nullable=False)
+    guid = Column('guid', String(255), nullable=True)
+    vote_count = Column('vote_count', Integer(), DefaultClause('0'),
+                        nullable=True)
+
+Index('idx_poll_answers_poll_id', PollAnswerBase.poll_id,
+      postgresql_using='btree')
+
+
+class PollParticipationBase(Base):
+
+    __tablename__ = 'poll_participations'
+
+    # TODO:  No Fks here too ?
+    id = Column('id', Integer(), primary_key=True)
+    poll_answer_id = Column('poll_answer_id', Integer(), nullable=False)
+    author_id = Column('author_id', Integer(), nullable=False)
+    poll_id = Column('poll_id', Integer(), nullable=False)
+    guid = Column('guid', String(255), nullable=True)
+    author_signature = Column('author_signature', Text(),
+                              nullable=True)
+    parent_author_signature = Column('parent_author_signature', Text(),
+                                     nullable=True)
+    created_at = Column('created_at', TIMESTAMP(), nullable=True)
+    updated_at = Column('updated_at', TIMESTAMP(), nullable=True)
+
+Index('idx_poll_participations_poll_id', PollParticipationBase.poll_id,
+      postgresql_using='btree')
+
+
+class PollsBase(Base):
+
+    __tablename__ = 'polls'
+
+    id = Column('id', Integer(), primary_key=True)
+    question = Column('question', String(255), nullable=False)
+    status_message_id = Column('status_message_id', Integer(), nullable=False)
+    status = Column('status', Boolean(), nullable=True)
+    guid = Column('guid', String(255), nullable=True)
+    created_at = Column('created_at', TIMESTAMP(), nullable=True)
+    updated_at = Column('updated_at', TIMESTAMP(), nullable=True)
+
+Index('idx_polls_status_message_id', PollsBase.status_message_id,
+      postgresql_using='btree')
+
+
 # TODO: Follow that doc
 # http://stackoverflow.com/questions/6151084/which-timestamp-type-should-i-choose-in-a-postgresql-database
 # http://stackoverflow.com/questions/13677781/getting-sqlalchemy-to-issue-create-schema-on-create-all
