@@ -17,7 +17,7 @@
 # vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4:
 
 from sqlalchemy import Column, ForeignKey
-from sqlalchemy.types import Integer, Text, Boolean, String
+from sqlalchemy.types import Date, Integer, Text, Boolean, String
 from sqlalchemy.orm import relationship
 from sqlalchemy.schema import Index, DefaultClause
 from sqlalchemy.dialects.postgres import TIMESTAMP
@@ -633,6 +633,66 @@ Index('idx_posts_status_message_guid_pending', PostBase.status_message_guid,
 Index('idx_posts_tweet_id', PostBase.tweet_id, postgresql_using='btree')
 Index('idx_posts_type_pending_id', PostBase.type, PostBase.pending,
       PostBase.id, postgresql_using='btree')
+
+
+class ProfileBase(Base):
+
+    __tablename__ = 'profiles'
+
+    id = Column('id', Integer(), primary_key=True)
+    diaspora_handle = Column('diaspora_handle', String(255), nullable=True)
+    first_name = Column('first_name', String(127), nullable=True)
+    last_name = Column('last_name', String(127), nullable=True)
+    image_url = Column('image_url', String(255), nullable=True)
+    image_url_small = Column('image_url_small', String(255), nullable=True)
+    image_url_medium = Column('image_url_medium', String(255), nullable=True)
+    birthday = Column('birthday', Date(), nullable=True)
+    gender = Column('gender', String(255), nullable=True)
+    bio = Column('bio', Text(), nullable=True)
+    searchable = Column('searchable', Boolean(), DefaultClause('true'),
+                        nullable=False)
+    person_id = Column('person_id', Integer(), ForeignKey('people.id'),
+                       nullable=False)
+    created_at = Column('created_at', TIMESTAMP(), nullable=False)
+    updated_at = Column('updated_at', TIMESTAMP(), nullable=False)
+    location = Column('location', String(255), nullable=True)
+    full_name = Column('full_name', String(70), nullable=True)
+    nsfw = Column('nsfw', Boolean(), DefaultClause('false'), nullable=True)
+
+Index('idx_profiles_full_name', ProfileBase.full_name,
+      postgresql_using='btree')
+Index('idx_profiles_full_name_searchable', ProfileBase.full_name,
+      ProfileBase.searchable, postgresql_using='btree')
+Index('idx_profiles_person_id', ProfileBase.person_id,
+      postgresql_using='btree')
+
+
+class ReportBase(Base):
+
+    __tablename__ = 'reports'
+
+    id = Column('id', Integer(), primary_key=True)
+    item_id = Column('item_id', Integer(), nullable=False)
+    item_type = Column('item_type', String(255), nullable=False)
+    reviewed = Column('reviewed', Boolean(), DefaultClause('false'),
+                      nullable=True)
+    text = Column('text', Text(), nullable=True)
+    created_at = Column('created_at', TIMESTAMP(), nullable=True)
+    updated_at = Column('updated_at', TIMESTAMP(), nullable=True)
+    user_id = Column('user_id', Integer(), nullable=False)
+
+Index('idx_reports_item_id', ReportBase.item_id, postgresql_using='btree')
+
+
+class RoleBase(Base):
+
+    __tablename__ = 'roles'
+
+    id = Column('id', Integer(), primary_key=True)
+    person_id = Column('person_id', Integer(), nullable=True)
+    name = Column('name', String(255), nullable=True)
+    created_at = Column('created_at', TIMESTAMP(), nullable=False)
+    updated_at = Column('updated_at', TIMESTAMP(), nullable=False)
 
 
 # TODO: Follow that doc
