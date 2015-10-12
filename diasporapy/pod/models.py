@@ -109,6 +109,46 @@ class BlockBase(Base):
     person_id = Column('person_id', Integer(), nullable=True)
 
 
+class ChatContactBase(Base):
+
+    __tablename__ = 'chat_contacts'
+
+    id = Column('id', Integer(), primary_key=True)
+    user_id = Column('user_id', Integer(), nullable=False)
+    jid = Column('jid', String(255), nullable=False)
+    name = Column('name', String(255), nullable=True)
+    ask = Column('ask', String(128), nullable=True)
+    subscription = Column('subscription', String(128), nullable=False)
+
+Index('idx_chat_contacts_user_id_jid', ChatContactBase.user_id,
+      ChatContactBase.jid, postgresql_using='btree')
+
+
+class ChatFragmentBase(Base):
+
+    __tablename__ = 'chat_fragments'
+
+    id = Column('id', Integer(), primary_key=True)
+    user_id = Column('user_id', Integer(), nullable=False)
+    root = Column('root', String(256), nullable=False)
+    namespace = Column('namespace', String(256), nullable=False)
+    xml = Column('xml', Text(), nullable=False)
+
+Index('idx_chat_fragments_user_id', ChatFragmentBase.user_id,
+      unique=True)
+
+
+class ChatOfflineMessageBase(Base):
+
+    __tablename__ = 'chat_offline_messages'
+
+    id = Column('id', Integer(), primary_key=True)
+    cfrom = Column('from', String(255), nullable=False)
+    to = Column('to', String(255), nullable=False)
+    message = Column('message', Text(), nullable=False)
+    created_at = Column('created_at', TIMESTAMP(), nullable=False)
+
+
 # TODO: Follow that doc
 # http://stackoverflow.com/questions/6151084/which-timestamp-type-should-i-choose-in-a-postgresql-database
 # http://stackoverflow.com/questions/13677781/getting-sqlalchemy-to-issue-create-schema-on-create-all
