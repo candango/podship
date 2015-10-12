@@ -1,0 +1,24 @@
+{
+  "name": "diasporapy",
+  "version": "0.0.1",
+  "homepage": "https://github.com/candango/diasporapy",
+  "authors": [
+    "Flavio Garcia<piraz@candango.org>"
+  ],
+  "description": "Aplication that shows the Firenado basic features.",
+  "license": "Apache 2.0",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "~2.1.4",
+    "canjs": "2.2.9",
+    "bootstrap": "~3.3.5",
+    "font-awesome": "~4.2.0",
+    "i18next": "1.10.2"
+  }
+}
