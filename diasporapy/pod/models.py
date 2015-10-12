@@ -49,7 +49,7 @@ class AspectMembershipBase(Base):
 
 Index('idx_aspect_memberships_aspect_id_contact_id',
       AspectMembershipBase.aspect_id, AspectMembershipBase.contact_id,
-      unique=True)
+      unique=True, postgresql_using='btree')
 Index('idx_aspect_memberships_aspect_id', AspectMembershipBase.aspect_id,
       postgresql_using='btree')
 Index('idx_aspect_memberships_contact_id', AspectMembershipBase.contact_id,
@@ -135,7 +135,7 @@ class ChatFragmentBase(Base):
     xml = Column('xml', Text(), nullable=False)
 
 Index('idx_chat_fragments_user_id', ChatFragmentBase.user_id,
-      unique=True)
+      unique=True, postgresql_using='btree')
 
 
 class ChatOfflineMessageBase(Base):
@@ -169,11 +169,33 @@ class CommentBase(Base):
     commentable_type = Column('commentable_type', String(60),
                               DefaultClause('Post'), nullable=False)
 
-Index('idx_comments_guid', CommentBase.guid, unique=True)
+Index('idx_comments_guid', CommentBase.guid, unique=True,
+      postgresql_using='btree')
 Index('idx_comments_author_id', CommentBase.author_id,
       postgresql_using='btree')
 Index('idx_comments_commentable_id_commentable_type',
       CommentBase.commentable_id, CommentBase.commentable_type,
+      postgresql_using='btree')
+
+
+class ContactBase(Base):
+
+    __tablename__ = 'contacts'
+
+    id = Column('id', Integer(), primary_key=True)
+    user_id = Column('user_id', Integer(), nullable=False)
+    person_id = Column('person_id', Integer(), ForeignKey('people.id'),
+                       nullable=False)
+    created_at = Column('created_at', TIMESTAMP(), nullable=False)
+    updated_at = Column('updated_at', TIMESTAMP(), nullable=False)
+    sharing = Column('sharing', Boolean(),
+                     DefaultClause('False'),nullable=False)
+    receiving = Column('receiving', Boolean(),
+                       DefaultClause('False'),nullable=False)
+
+Index('idx_contacts_user_id_person_id', ContactBase.user_id,
+      ContactBase.person_id, unique=True, postgresql_using='btree')
+Index('idx_contacts_person_id', ContactBase.person_id,
       postgresql_using='btree')
 
 
@@ -263,21 +285,6 @@ class UserPreferenceBase(Base):
     user_id = Column('user_id', Integer(), ForeignKey('users.id'), nullable=True)
     created_at = Column('created_at', TIMESTAMP(), nullable=False)
     updated_at = Column('updated_at', TIMESTAMP(), nullable=False)
-
-
-class ContactBase(Base):
-
-    __tablename__ = 'contacts'
-
-    id = Column('id', Integer(), primary_key=True)
-    user_id = Column('user_id', Integer(), nullable=False)
-    person_id = Column('person_id', Integer(), nullable=False)
-    created_at = Column('created_at', TIMESTAMP(), nullable=False)
-    updated_at = Column('updated_at', TIMESTAMP(), nullable=False)
-    sharing = Column('sharing', Boolean(),
-                     DefaultClause('False'),nullable=False)
-    receiving = Column('receiving', Boolean(),
-                       DefaultClause('False'),nullable=False)
 
 
 class PeopleBase(Base):
