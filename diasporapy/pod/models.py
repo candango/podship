@@ -459,7 +459,7 @@ class PersonBase(Base):
     created_at = Column('created_at', TIMESTAMP(), nullable=False)
     updated_at = Column('updated_at', TIMESTAMP(), nullable=False)
     closed_account = Column('closed_account', Boolean(),
-                            DefaultClause('False'),nullable=True)
+                            DefaultClause('False'), nullable=True)
     fetch_status = Column('fetch_status', Integer(), DefaultClause('0'),
                           nullable=True)
 
@@ -469,6 +469,50 @@ Index('idx_people_guid', PersonBase.guid, unique=True,
       postgresql_using='btree')
 Index('idx_people_owner_id', PersonBase.owner_id, unique=True,
       postgresql_using='btree')
+
+
+class PhotoBase(Base):
+
+    __tablename__ = 'photos'
+
+    id = Column('id', Integer(), primary_key=True)
+    tmp_old_id = Column('tmp_old_id', Integer(), nullable=True)
+    author_id = Column('author_id', Integer(), nullable=False)
+    public = Column('public', Boolean(), DefaultClause('False'),
+                    nullable=False)
+    diaspora_handle = Column('diaspora_handle', String(255),
+                             nullable=True)
+    guid = Column('guid', String(255), nullable=False)
+    pending = Column('pending', Boolean(), DefaultClause('False'),
+                     nullable=False)
+    text = Column('text', Text(), nullable=True)
+    remote_photo_path = Column('remote_photo_path', Text(), nullable=True)
+    remote_photo_name = Column('remote_photo_name', String(255),
+                               nullable=True)
+    random_string = Column('random_string', String(255), nullable=True)
+    processed_image = Column('processed_image', String(255), nullable=True)
+    created_at = Column('created_at', TIMESTAMP(), nullable=True)
+    updated_at = Column('updated_at', TIMESTAMP(), nullable=True)
+    unprocessed_image = Column('unprocessed_image', String(255), nullable=True)
+    status_message_guid = Column('status_message_guid', String(255),
+                                 nullable=True)
+    comments_count = Column('comments_count', Integer(), nullable=True)
+    height = Column('height', Integer(), nullable=True)
+    width = Column('width', Integer(), nullable=True)
+
+Index('idx_photos_status_message_guid', PhotoBase.status_message_guid,
+      postgresql_using='btree')
+
+
+class PodBase(Base):
+
+    __tablename__ = 'pods'
+
+    id = Column('id', Integer(), primary_key=True)
+    host = Column('host', String(255), nullable=True)
+    ssl = Column('ssl', Boolean(), nullable=True)
+    created_at = Column('created_at', TIMESTAMP(), nullable=False)
+    updated_at = Column('updated_at', TIMESTAMP(), nullable=False)
 
 
 # TODO: Follow that doc
