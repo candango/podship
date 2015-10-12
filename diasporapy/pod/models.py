@@ -824,6 +824,18 @@ Index('idx_tags_name', TagBase.name, unique=True,
       postgresql_using='btree')
 
 
+class UserPreferenceBase(Base):
+
+    __tablename__ = 'user_preferences'
+
+    id = Column('id', Integer(), primary_key=True)
+    email_type = Column('email_type', String(255), nullable=True)
+    # TODO: No FK here too!
+    user_id = Column('user_id', Integer(), nullable=True)
+    created_at = Column('created_at', TIMESTAMP(), nullable=False)
+    updated_at = Column('updated_at', TIMESTAMP(), nullable=False)
+
+
 # TODO: Follow that doc
 # http://stackoverflow.com/questions/6151084/which-timestamp-type-should-i-choose-in-a-postgresql-database
 # http://stackoverflow.com/questions/13677781/getting-sqlalchemy-to-issue-create-schema-on-create-all
@@ -832,7 +844,6 @@ class UserBase(Base):
     __tablename__ = 'users'
 
     id = Column('id', Integer(), primary_key=True)
-
     user_name = Column('username', String(255), nullable=True)
     serialized_private_key = Column('serialized_private_key', Text,
                                     nullable=True)
@@ -840,7 +851,7 @@ class UserBase(Base):
                              DefaultClause('True'), nullable=False)
     disable_mail = Column('disable_mail', Boolean(),
                           DefaultClause('False'), nullable=False)
-    language = Column('language', String(255), nullable=True, unique=True)
+    language = Column('language', String(255), nullable=True)
     email = Column('email', String(255), DefaultClause(''), nullable=False)
     encrypted_password = Column('encrypted_password', String(255),
                                 DefaultClause(''), nullable=False)
@@ -869,7 +880,7 @@ class UserBase(Base):
     invited_by_id = Column('invited_by_id', Integer(), nullable=True)
     invited_by_type = Column('invited_by_type', String(255), nullable=True)
     authentication_token = Column('authentication_token', String(30),
-                                  nullable=True, unique=True)
+                                  nullable=True)
     unconfirmed_email = Column('unconfirmed_email', String(255), nullable=True)
     confirm_email_token = Column('confirm_email_token', String(30),
                                  nullable=True)
@@ -896,17 +907,17 @@ class UserBase(Base):
                                   nullable=True)
     exported_photos_at = Column('exported_photos_at', TIMESTAMP(),
                                 nullable=True)
-    exporting_photos = Column( 'exporting_photos', Boolean(),
-                               DefaultClause('False'),nullable=True)
+    exporting_photos = Column('exporting_photos', Boolean(),
+                              DefaultClause('False'), nullable=True)
     preferences = relationship("UserPreferenceBase", backref="user")
 
-
-class UserPreferenceBase(Base):
-
-    __tablename__ = 'user_preferences'
-
-    id = Column('id', Integer(), primary_key=True)
-    email_type = Column('email_type', String(255), nullable=True)
-    user_id = Column('user_id', Integer(), ForeignKey('users.id'), nullable=True)
-    created_at = Column('created_at', TIMESTAMP(), nullable=False)
-    updated_at = Column('updated_at', TIMESTAMP(), nullable=False)
+Index('idx_users_authentication_token', UserBase.authentication_token,
+      unique=True, postgresql_using='btree')
+Index('idx_users_invitation_service_invitation_identifier',
+      UserBase.invitation_service, UserBase.invitation_identifier, unique=True,
+      postgresql_using='btree')
+Index('idx_users_username', UserBase.user_name, unique=True,
+      postgresql_using='btree')
+Index('idx_users_email', UserBase.email, postgresql_using='btree')
+Index('idx_users_invitation_token', UserBase.authentication_token,
+      postgresql_using='btree')
