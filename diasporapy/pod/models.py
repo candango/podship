@@ -277,6 +277,60 @@ Index('idx_invitations_sender_id', InvitationsBase.sender_id,
       postgresql_using='btree')
 
 
+class LikeBase(Base):
+
+    __tablename__ = 'likes'
+
+    id = Column('id', Integer(), primary_key=True)
+    positive = Column('positive', Boolean(), DefaultClause('True'),
+                      nullable=True)
+    target_id = Column('target_id', Integer(), nullable=True)
+    author_id = Column('author_id', Integer(), ForeignKey('people.id'),
+                       nullable=True)
+    guid = Column('guid', String(255), nullable=True)
+    author_signature = Column('author_signature', Text(), nullable=True)
+    parent_author_signature = Column('parent_author_signature', Text(),
+                                     nullable=True)
+    created_at = Column('created_at', TIMESTAMP(), nullable=False)
+    updated_at = Column('updated_at', TIMESTAMP(), nullable=False)
+    target_type = Column('target_type', String(60), nullable=False)
+
+Index('idx_likes_guid', LikeBase.guid, unique=True, postgresql_using='btree')
+Index('idx_likes_target_id_author_id_target_type', LikeBase.target_id,
+      LikeBase.author_id, LikeBase.target_type, unique=True,
+      postgresql_using='btree')
+Index('idx_likes_author_id', LikeBase.author_id, postgresql_using='btree')
+Index('idx_likes_target_id', LikeBase.target_id, postgresql_using='btree')
+
+
+class LocationBase(Base):
+
+    __tablename__ = 'locations'
+
+    id = Column('id', Integer(), primary_key=True)
+    address = Column('address', String(255), nullable=True)
+    lat = Column('lat', String(255), nullable=True)
+    lng = Column('lng', String(255), nullable=True)
+    status_message_id = Column('status_message_id', Integer(), nullable=True)
+    created_at = Column('created_at', TIMESTAMP(), nullable=False)
+    updated_at = Column('updated_at', TIMESTAMP(), nullable=False)
+
+
+class MentionBase(Base):
+
+    __tablename__ = 'mentions'
+
+    id = Column('id', Integer(), primary_key=True)
+    post_id = Column('post_id', Integer(), nullable=False)
+    person_id = Column('person_id', Integer(), nullable=False)
+
+Index('idx_mentions_person_id_post_id', MentionBase.person_id,
+      MentionBase.post_id, unique=True, postgresql_using='btree')
+Index('idx_mentions_person_id', MentionBase.person_id,
+      postgresql_using='btree')
+Index('idx_mentions_post_id', MentionBase.post_id, postgresql_using='btree')
+
+
 # TODO: Follow that doc
 # http://stackoverflow.com/questions/6151084/which-timestamp-type-should-i-choose-in-a-postgresql-database
 # http://stackoverflow.com/questions/13677781/getting-sqlalchemy-to-issue-create-schema-on-create-all
