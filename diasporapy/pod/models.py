@@ -568,6 +568,73 @@ Index('idx_polls_status_message_id', PollsBase.status_message_id,
       postgresql_using='btree')
 
 
+class PostBase(Base):
+
+    __tablename__ = 'posts'
+
+    id = Column('id', Integer(), primary_key=True)
+    author_id = Column('author_id', Integer(), ForeignKey('people.id'),
+                       nullable=False)
+    public = Column('public', Boolean(), DefaultClause('false'),
+                    nullable=False)
+    diaspora_handle = Column('diaspora_handle', String(255), nullable=True)
+    guid = Column('guid', String(255), nullable=False)
+    pending = Column('pending', Boolean(), DefaultClause('false'),
+                    nullable=False)
+    type = Column('type', String(40), nullable=False)
+    text = Column('text', Text(), nullable=True)
+    remote_photo_path = Column('remote_photo_path', Text(), nullable=True)
+    remote_photo_name = Column('remote_photo_name', String(255), nullable=True)
+    random_string = Column('random_string', String(255), nullable=True)
+    processed_image = Column('processed_image', String(255), nullable=True)
+    created_at = Column('created_at', TIMESTAMP(), nullable=False)
+    updated_at = Column('updated_at', TIMESTAMP(), nullable=False)
+    unprocessed_image = Column('unprocessed_image', String(255), nullable=True)
+    object_url = Column('object_url', String(255), nullable=True)
+    image_url = Column('image_url', String(255), nullable=True)
+    image_height = Column('image_height', Integer(), nullable=True)
+    image_width = Column('image_width', Integer(), nullable=True)
+    provider_display_name = Column('provider_display_name', String(255),
+                                   nullable=True)
+    actor_url = Column('actor_url', String(255), nullable=True)
+    objectId = Column('objectId', String(255), nullable=True)
+    root_guid = Column('root_guid', String(255), nullable=True)
+    status_message_guid = Column('status_message_guid', String(255),
+                                 nullable=True)
+    likes_count = Column('likes_count', Integer(), DefaultClause('0'),
+                         nullable=True)
+    comments_count = Column('comments_count', Integer(), DefaultClause('0'),
+                            nullable=True)
+    o_embed_cache_id = Column('o_embed_cache_id', Integer(), nullable=True)
+    reshares_count = Column('reshares_count', Integer(), DefaultClause('0'),
+                            nullable=True)
+    interacted_at = Column('interacted_at', TIMESTAMP(), nullable=True)
+    frame_name = Column('frame_name', String(255), nullable=True)
+    favorite = Column('favorite', Boolean(), DefaultClause('false'),
+                      nullable=True)
+    facebook_id = Column('facebook_id', String(255), nullable=True)
+    tweet_id = Column('tweet_id', String(255), nullable=True)
+    open_graph_cache_id = Column('open_graph_cache_id', Integer(),
+                                 nullable=True)
+    tumblr_ids = Column('tumblr_ids', Text(), nullable=True)
+
+Index('idx_posts_author_id_root_guid', PostBase.author_id,
+      PostBase.root_guid, unique= True, postgresql_using='btree')
+Index('idx_posts_guid', PostBase.guid, unique=True,
+      postgresql_using='btree')
+Index('idx_posts_author_id', PostBase.author_id, postgresql_using='btree')
+Index('idx_posts_id_type_created_at', PostBase.id, PostBase.type,
+      PostBase.created_at, postgresql_using='btree')
+Index('idx_posts_root_guid', PostBase.root_guid, postgresql_using='btree')
+Index('idx_posts_status_message_guid', PostBase.status_message_guid,
+      postgresql_using='btree')
+Index('idx_posts_status_message_guid_pending', PostBase.status_message_guid,
+      PostBase.pending, postgresql_using='btree')
+Index('idx_posts_tweet_id', PostBase.tweet_id, postgresql_using='btree')
+Index('idx_posts_type_pending_id', PostBase.type, PostBase.pending,
+      PostBase.id, postgresql_using='btree')
+
+
 # TODO: Follow that doc
 # http://stackoverflow.com/questions/6151084/which-timestamp-type-should-i-choose-in-a-postgresql-database
 # http://stackoverflow.com/questions/13677781/getting-sqlalchemy-to-issue-create-schema-on-create-all
