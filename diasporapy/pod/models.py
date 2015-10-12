@@ -19,7 +19,7 @@
 from sqlalchemy import Column, ForeignKey
 from sqlalchemy.types import Integer, Text, Boolean, String
 from sqlalchemy.orm import relationship, backref
-from sqlalchemy.schema import DefaultClause
+from sqlalchemy.schema import Index, DefaultClause
 from sqlalchemy.dialects.postgres import TIMESTAMP
 
 from firenado.util.sqlalchemy_util import Base
@@ -177,14 +177,41 @@ class AccountDeletionBase(Base):
 
 class AspectMembershipBase(Base):
 
+
     __tablename__ = 'aspect_memberships'
 
-    # User id. This field is auto generated.
+    # Aspect membership id. This field is auto generated.
     id = Column('id', Integer(), primary_key=True)
     aspect_id = Column('aspect_id', Integer(), nullable=True)
     contact_id = Column('contact_id', Integer(), nullable=True)
     created_at = Column('created_at', TIMESTAMP(), nullable=False)
     updated_at = Column('updated_at', TIMESTAMP(), nullable=False)
+
+
+class AspectVisibilityBase(Base):
+    """ Aspect visibility mapping object
+    """
+
+    __tablename__ = 'aspect_visibilities'
+
+    # User id. This field is auto generated.
+    id = Column('id', Integer(), primary_key=True)
+    shareable_id = Column('shareable_id', Integer(), nullable=False)
+    aspect_id = Column('aspect_id', Integer(), ForeignKey('aspects.id'),
+                       nullable=False)
+    created_at = Column('created_at', TIMESTAMP(), nullable=False)
+    updated_at = Column('updated_at', TIMESTAMP(), nullable=False)
+    shareable_type = Column('shareable_type', String(255),
+                            DefaultClause('Post'), nullable=False)
+
+Index('aspect_visibilities_aspect_id_idx', AspectVisibilityBase.aspect_id,
+      postgresql_using='btree')
+Index('aspect_visibilities_shareable_id_shareable_type_idx',
+      AspectVisibilityBase.shareable_id, AspectVisibilityBase.shareable_type,
+      postgresql_using='btree')
+Index('aspect_visibilities_shareable_id_shareable_type_aspect_id_idx',
+      AspectVisibilityBase.shareable_id, AspectVisibilityBase.shareable_type,
+      AspectVisibilityBase.aspect_id, postgresql_using='btree')
 
 
 class AspectBase(Base):
