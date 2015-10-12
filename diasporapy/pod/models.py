@@ -238,6 +238,45 @@ Index('idx_conversations_author_id', ConversationBase.author_id,
       postgresql_using='btree')
 
 
+class InvitationCodesBase(Base):
+
+    __tablename__ = 'invitation_codes'
+
+    id = Column('id', Integer(), primary_key=True)
+    token = Column('token', String(255), nullable=True)
+    user_id = Column('user_id', Integer(), nullable=True)
+    count = Column('count', Integer(), nullable=True)
+    created_at = Column('created_at', TIMESTAMP(), nullable=False)
+    updated_at = Column('updated_at', TIMESTAMP(), nullable=False)
+
+
+class InvitationsBase(Base):
+
+    __tablename__ = 'invitations'
+
+    id = Column('id', Integer(), primary_key=True)
+    message = Column('message', Text(), nullable=True)
+    sender_id = Column('sender_id', Integer(), ForeignKey('users.id'),
+                       nullable=True)
+    recipient_id = Column('recipient_id', Integer(), ForeignKey('users.id'),
+                          nullable=True)
+    aspect_id = Column('aspect_id', Integer(), nullable=True)
+    created_at = Column('created_at', TIMESTAMP(), nullable=False)
+    updated_at = Column('updated_at', TIMESTAMP(), nullable=False)
+    service = Column('service', String(255), nullable=True)
+    identifier = Column('identifier', String(255), nullable=True)
+    admin = Column('admin', Boolean(), DefaultClause('False'), nullable=True)
+    language = Column('language', String(255), DefaultClause('en'),
+                      nullable=True)
+
+Index('idx_invitations_aspect_id', InvitationsBase.aspect_id,
+      postgresql_using='btree')
+Index('idx_invitations_recipient_id', InvitationsBase.recipient_id,
+      postgresql_using='btree')
+Index('idx_invitations_sender_id', InvitationsBase.sender_id,
+      postgresql_using='btree')
+
+
 # TODO: Follow that doc
 # http://stackoverflow.com/questions/6151084/which-timestamp-type-should-i-choose-in-a-postgresql-database
 # http://stackoverflow.com/questions/13677781/getting-sqlalchemy-to-issue-create-schema-on-create-all
