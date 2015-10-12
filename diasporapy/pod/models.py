@@ -18,7 +18,7 @@
 
 from sqlalchemy import Column, ForeignKey
 from sqlalchemy.types import Integer, Text, Boolean, String
-from sqlalchemy.orm import relationship, backref
+from sqlalchemy.orm import relationship
 from sqlalchemy.schema import Index, DefaultClause
 from sqlalchemy.dialects.postgres import TIMESTAMP
 
@@ -177,15 +177,24 @@ class AccountDeletionBase(Base):
 
 class AspectMembershipBase(Base):
 
-
     __tablename__ = 'aspect_memberships'
 
     # Aspect membership id. This field is auto generated.
     id = Column('id', Integer(), primary_key=True)
-    aspect_id = Column('aspect_id', Integer(), nullable=True)
-    contact_id = Column('contact_id', Integer(), nullable=True)
+    aspect_id = Column('aspect_id', Integer(), ForeignKey('aspects.id'),
+                       nullable=False)
+    contact_id = Column('contact_id', Integer(), ForeignKey('contacts.id'),
+                        nullable=False)
     created_at = Column('created_at', TIMESTAMP(), nullable=False)
     updated_at = Column('updated_at', TIMESTAMP(), nullable=False)
+
+Index('idx_aspect_memberships_aspect_id_contact_id',
+      AspectMembershipBase.aspect_id, AspectMembershipBase.contact_id,
+      unique=True)
+Index('idx_aspect_memberships_aspect_id', AspectMembershipBase.aspect_id,
+      postgresql_using='btree')
+Index('idx_aspect_memberships_contact_id', AspectMembershipBase.contact_id,
+      postgresql_using='btree')
 
 
 class AspectVisibilityBase(Base):
