@@ -40,9 +40,15 @@ class AspectMembershipBase(Base):
     __tablename__ = 'aspect_memberships'
 
     id = Column('id', Integer(), primary_key=True)
-    aspect_id = Column('aspect_id', Integer(), ForeignKey('aspects.id'),
+    aspect_id = Column('aspect_id', Integer(),
+                       ForeignKey('aspects.id',
+                                  name='fk_aspect_memberships_aspect_id',
+                                  ondelete='CASCADE'),
                        nullable=False)
-    contact_id = Column('contact_id', Integer(), ForeignKey('contacts.id'),
+    contact_id = Column('contact_id', Integer(),
+                        ForeignKey('contacts.id',
+                                   name='fk_aspect_memberships_contact_id',
+                                   ondelete='CASCADE'),
                         nullable=False)
     created_at = Column('created_at', TIMESTAMP(), nullable=False)
     updated_at = Column('updated_at', TIMESTAMP(), nullable=False)
@@ -62,7 +68,10 @@ class AspectVisibilityBase(Base):
 
     id = Column('id', Integer(), primary_key=True)
     shareable_id = Column('shareable_id', Integer(), nullable=False)
-    aspect_id = Column('aspect_id', Integer(), ForeignKey('aspects.id'),
+    aspect_id = Column('aspect_id', Integer(),
+                       ForeignKey('aspects.id',
+                                  name='fk_aspect_visibilities_aspect_id',
+                                  ondelete='CASCADE'),
                        nullable=False)
     created_at = Column('created_at', TIMESTAMP(), nullable=False)
     updated_at = Column('updated_at', TIMESTAMP(), nullable=False)
@@ -121,7 +130,7 @@ class ChatContactBase(Base):
     subscription = Column('subscription', String(128), nullable=False)
 
 Index('idx_chat_contacts_user_id_jid', ChatContactBase.user_id,
-      ChatContactBase.jid, postgresql_using='btree')
+      ChatContactBase.jid, unique='true', postgresql_using='btree')
 
 
 class ChatFragmentBase(Base):
@@ -156,7 +165,9 @@ class CommentBase(Base):
     id = Column('id', Integer(), primary_key=True)
     text = Column('text', Text(), nullable=False)
     commentable_id = Column('commentable_id', Integer(), nullable=False)
-    author_id = Column('author_id', Integer(), ForeignKey('people.id'),
+    author_id = Column('author_id', Integer(),
+                       ForeignKey('people.id', name='fk_comments_author_id',
+                                  ondelete='CASCADE'),
                        nullable=False)
     guid = Column('guid', String(255), nullable=False)
     author_signature = Column('author_signature', Text(), nullable=True)
@@ -184,7 +195,9 @@ class ContactBase(Base):
 
     id = Column('id', Integer(), primary_key=True)
     user_id = Column('user_id', Integer(), nullable=False)
-    person_id = Column('person_id', Integer(), ForeignKey('people.id'),
+    person_id = Column('person_id', Integer(),
+                       ForeignKey('people.id', name='fk_contacts_person_id',
+                                  ondelete='CASCADE'),
                        nullable=False)
     created_at = Column('created_at', TIMESTAMP(), nullable=False)
     updated_at = Column('updated_at', TIMESTAMP(), nullable=False)
@@ -204,10 +217,18 @@ class ConversationVisibilityBase(Base):
     __tablename__ = 'conversation_visibilities'
 
     id = Column('id', Integer(), primary_key=True)
-    conversation_id = Column('conversation_id', Integer(),
-                             ForeignKey('conversations.id'), nullable=False)
-    person_id = Column('person_id', Integer(), ForeignKey('people.id'),
-                       nullable=False)
+    conversation_id = Column(
+        'conversation_id', Integer(),
+        ForeignKey('conversations.id',
+                   name='fk_conversation_visibilities_conversation_id',
+                   ondelete='CASCADE'),
+        nullable=False)
+    person_id = Column(
+        'person_id', Integer(),
+        ForeignKey('people.id',
+                   name='fk_conversation_visibilities_person_id',
+                   ondelete='CASCADE'),
+        nullable=False)
     unread = Column('unread', Integer(), DefaultClause('0'), nullable=False)
     created_at = Column('created_at', TIMESTAMP(), nullable=False)
     updated_at = Column('updated_at', TIMESTAMP(), nullable=False)
@@ -229,7 +250,10 @@ class ConversationBase(Base):
     id = Column('id', Integer(), primary_key=True)
     subject = Column('subject', String(255), nullable=True)
     guid = Column('guid', String(255), nullable=False)
-    author_id = Column('author_id', Integer(), ForeignKey('people.id'),
+    author_id = Column('author_id', Integer(),
+                       ForeignKey('people.id',
+                                  name='fk_conversations_author_id',
+                                  ondelete='CASCADE'),
                        nullable=False)
     created_at = Column('created_at', TIMESTAMP(), nullable=False)
     updated_at = Column('updated_at', TIMESTAMP(), nullable=False)
@@ -238,7 +262,7 @@ Index('idx_conversations_author_id', ConversationBase.author_id,
       postgresql_using='btree')
 
 
-class InvitationCodesBase(Base):
+class InvitationCodeBase(Base):
 
     __tablename__ = 'invitation_codes'
 
@@ -256,9 +280,15 @@ class InvitationsBase(Base):
 
     id = Column('id', Integer(), primary_key=True)
     message = Column('message', Text(), nullable=True)
-    sender_id = Column('sender_id', Integer(), ForeignKey('users.id'),
+    sender_id = Column('sender_id', Integer(),
+                       ForeignKey('users.id',
+                                  name='fk_invitations_sender_id',
+                                  ondelete='CASCADE'),
                        nullable=True)
-    recipient_id = Column('recipient_id', Integer(), ForeignKey('users.id'),
+    recipient_id = Column('recipient_id', Integer(),
+                          ForeignKey('users.id',
+                                     name='fk_invitations_recipient_id',
+                                     ondelete='CASCADE'),
                           nullable=True)
     aspect_id = Column('aspect_id', Integer(), nullable=True)
     created_at = Column('created_at', TIMESTAMP(), nullable=False)
@@ -285,7 +315,10 @@ class LikeBase(Base):
     positive = Column('positive', Boolean(), DefaultClause('True'),
                       nullable=True)
     target_id = Column('target_id', Integer(), nullable=True)
-    author_id = Column('author_id', Integer(), ForeignKey('people.id'),
+    author_id = Column('author_id', Integer(),
+                       ForeignKey('people.id',
+                                  name='fk_likes_author_id',
+                                  ondelete='CASCADE'),
                        nullable=True)
     guid = Column('guid', String(255), nullable=True)
     author_signature = Column('author_signature', Text(), nullable=True)
@@ -338,9 +371,13 @@ class MessageBase(Base):
     id = Column('id', Integer(), primary_key=True)
 
     conversation_id = Column('conversation_id', Integer(),
-                             ForeignKey('conversations.id'), nullable=False)
-    author_id = Column('author_id', Integer(), ForeignKey('people.id'),
-                       nullable=False)
+                             ForeignKey('conversations.id',
+                                        name='fk_messages_conversation_id',
+                                        ondelete='CASCADE'), nullable=False)
+    author_id = Column('author_id', Integer(),
+                       ForeignKey('people.id',
+                                  name='fk_messages_author_id',
+                                  ondelete='CASCADE'), nullable=False)
     guid = Column('guid', String(255), nullable=False)
     text = Column('text', Text(), nullable=False)
     created_at = Column('created_at', TIMESTAMP(), nullable=False)
@@ -361,8 +398,11 @@ class NotificationActorBase(Base):
     __tablename__ = 'notification_actors'
 
     id = Column('id', Integer(), primary_key=True)
-    notification_id = Column('notification_id', Integer(),
-                             ForeignKey('notifications.id'), nullable=True)
+    notification_id = Column(
+        'notification_id', Integer(),
+        ForeignKey('notifications.id',
+                   name='fk_notification_actors_notification_id',
+                   ondelete='CASCADE'), nullable=True)
     person_id = Column('person_id', Integer(), nullable=True)
     created_at = Column('created_at', TIMESTAMP(), nullable=False)
     updated_at = Column('updated_at', TIMESTAMP(), nullable=False)
@@ -571,8 +611,9 @@ class PostBase(Base):
     __tablename__ = 'posts'
 
     id = Column('id', Integer(), primary_key=True)
-    author_id = Column('author_id', Integer(), ForeignKey('people.id'),
-                       nullable=False)
+    author_id = Column('author_id', Integer(),
+                       ForeignKey('people.id', name='fk_posts_author_id',
+                                  ondelete='CASCADE'), nullable=False)
     public = Column('public', Boolean(), DefaultClause('false'),
                     nullable=False)
     diaspora_handle = Column('diaspora_handle', String(255), nullable=True)
@@ -649,7 +690,9 @@ class ProfileBase(Base):
     bio = Column('bio', Text(), nullable=True)
     searchable = Column('searchable', Boolean(), DefaultClause('true'),
                         nullable=False)
-    person_id = Column('person_id', Integer(), ForeignKey('people.id'),
+    person_id = Column('person_id', Integer(),
+                       ForeignKey('people.id', name='fk_profiles_person_id',
+                                  ondelete='CASCADE'),
                        nullable=False)
     created_at = Column('created_at', TIMESTAMP(), nullable=False)
     updated_at = Column('updated_at', TIMESTAMP(), nullable=False)
@@ -711,7 +754,9 @@ class ServiceBase(Base):
 
     id = Column('id', Integer(), primary_key=True)
     type = Column('type', String(127), nullable=False)
-    user_id = Column('user_id', Integer(), ForeignKey('users.id'),
+    user_id = Column('user_id', Integer(),
+                     ForeignKey('users.id', name='fk_services_user_id',
+                                ondelete='CASCADE'),
                      nullable=False)
     uid = Column('uid', String(127), nullable=True)
     access_token = Column('access_token', String(255), nullable=True)
@@ -735,7 +780,10 @@ class ShareVisibilityBase(Base):
     updated_at = Column('updated_at', TIMESTAMP(), nullable=False)
     hidden = Column('hidden', Boolean(), DefaultClause('false'),
                     nullable=False)
-    contact_id = Column('contact_id', Integer(), ForeignKey('contacts.id'),
+    contact_id = Column('contact_id', Integer(),
+                        ForeignKey('contacts.id',
+                                   name='fk_post_visibilities_contact_id',
+                                   ondelete='CASCADE'),
                         nullable=False)
     shareable_type = Column('shareable_type', String(60),
                             DefaultClause('Post'), nullable=False)
