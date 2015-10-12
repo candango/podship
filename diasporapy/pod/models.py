@@ -32,10 +32,8 @@ class UserBase(Base):
 
     __tablename__ = 'users'
 
-    # User id. This field is auto generated.
     id = Column('id', Integer(), primary_key=True)
 
-    # User name or accounts.
     user_name = Column('username', String(255), nullable=True)
     serialized_private_key = Column('serialized_private_key', Text,
                                     nullable=True)
@@ -108,7 +106,6 @@ class UserPreferenceBase(Base):
 
     __tablename__ = 'user_preferences'
 
-    # User id. This field is auto generated.
     id = Column('id', Integer(), primary_key=True)
     email_type = Column('email_type', String(255), nullable=True)
     user_id = Column('user_id', Integer(), ForeignKey('users.id'), nullable=True)
@@ -120,7 +117,6 @@ class ContactBase(Base):
 
     __tablename__ = 'contacts'
 
-    # User id. This field is auto generated.
     id = Column('id', Integer(), primary_key=True)
     user_id = Column('user_id', Integer(), nullable=False)
     person_id = Column('person_id', Integer(), nullable=False)
@@ -136,7 +132,6 @@ class PeopleBase(Base):
 
     __tablename__ = 'people'
 
-    # User id. This field is auto generated.
     id = Column('id', Integer(), primary_key=True)
     guid = Column('guid', String(255), nullable=False)
     url = Column('url', Text, nullable=False)
@@ -157,7 +152,6 @@ class TagBase(Base):
 
     __tablename__ = 'tags'
 
-    # User id. This field is auto generated.
     id = Column('id', Integer(), primary_key=True)
     name = Column('name', String(255), nullable=False)
     taggings_count = Column('taggings_count', Integer(), DefaultClause('0'),
@@ -168,7 +162,6 @@ class AccountDeletionBase(Base):
 
     __tablename__ = 'account_deletions'
 
-    # User id. This field is auto generated.
     id = Column('id', Integer(), primary_key=True)
     diaspora_handle = Column('diaspora_handle', String(255), nullable=False)
     person_id = Column('person_id', Integer(), nullable=True)
@@ -179,7 +172,6 @@ class AspectMembershipBase(Base):
 
     __tablename__ = 'aspect_memberships'
 
-    # Aspect membership id. This field is auto generated.
     id = Column('id', Integer(), primary_key=True)
     aspect_id = Column('aspect_id', Integer(), ForeignKey('aspects.id'),
                        nullable=False)
@@ -198,12 +190,9 @@ Index('idx_aspect_memberships_contact_id', AspectMembershipBase.contact_id,
 
 
 class AspectVisibilityBase(Base):
-    """ Aspect visibility mapping object
-    """
 
     __tablename__ = 'aspect_visibilities'
 
-    # User id. This field is auto generated.
     id = Column('id', Integer(), primary_key=True)
     shareable_id = Column('shareable_id', Integer(), nullable=False)
     aspect_id = Column('aspect_id', Integer(), ForeignKey('aspects.id'),
@@ -227,7 +216,6 @@ class AspectBase(Base):
 
     __tablename__ = 'aspects'
 
-    # User id. This field is auto generated.
     id = Column('id', Integer(), primary_key=True)
     name = Column('name', String(255), nullable=False)
     user_id = Column('user_id', Integer(), nullable=False)
@@ -244,7 +232,6 @@ class BlockBase(Base):
 
     __tablename__ = 'blocks'
 
-    # User id. This field is auto generated.
     id = Column('id', Integer(), primary_key=True)
     user_id = Column('user_id', Integer(), nullable=False)
     person_id = Column('person_id', Integer(), nullable=False)
