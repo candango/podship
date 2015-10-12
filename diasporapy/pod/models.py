@@ -331,6 +331,74 @@ Index('idx_mentions_person_id', MentionBase.person_id,
 Index('idx_mentions_post_id', MentionBase.post_id, postgresql_using='btree')
 
 
+class MessageBase(Base):
+
+    __tablename__ = 'messages'
+
+    id = Column('id', Integer(), primary_key=True)
+
+    conversation_id = Column('conversation_id', Integer(),
+                             ForeignKey('conversations.id'), nullable=False)
+    author_id = Column('author_id', Integer(), ForeignKey('people.id'),
+                       nullable=False)
+    guid = Column('guid', String(255), nullable=False)
+    text = Column('text', Text(), nullable=False)
+    parent_author_signature = Column('parent_author_signature', Text(),
+                                     nullable=True)
+    created_at = Column('created_at', TIMESTAMP(), nullable=False)
+    updated_at = Column('updated_at', TIMESTAMP(), nullable=False)
+    author_signature = Column('author_signature', Text(),
+                              nullable=True)
+    parent_author_signature = Column('parent_author_signature', Text(),
+                                     nullable=True)
+
+Index('idx_messages_author_id', MessageBase.author_id,
+      postgresql_using='btree')
+Index('idx_messages_conversation_id', MessageBase.conversation_id,
+      postgresql_using='btree')
+
+
+class NotificationActorBase(Base):
+
+    __tablename__ = 'notification_actors'
+
+    id = Column('id', Integer(), primary_key=True)
+    notification_id = Column('notification_id', Integer(),
+                             ForeignKey('notifications.id'), nullable=True)
+    person_id = Column('person_id', Integer(), nullable=True)
+    created_at = Column('created_at', TIMESTAMP(), nullable=False)
+    updated_at = Column('updated_at', TIMESTAMP(), nullable=False)
+
+Index('idx_notification_actors_notification_id_person_id',
+      NotificationActorBase.notification_id, NotificationActorBase.person_id,
+      unique=True, postgresql_using='btree')
+Index('idx_notification_actors_notification_id',
+      NotificationActorBase.notification_id, postgresql_using='btree')
+Index('idx_notification_actors_person_id', NotificationActorBase.person_id,
+      postgresql_using='btree')
+
+
+class NotificationBase(Base):
+
+    __tablename__ = 'notifications'
+
+    id = Column('id', Integer(), primary_key=True)
+    target_type = Column('target_type', String(255), nullable=True)
+    target_id = Column('target_id', Integer(), nullable=True)
+    recipient_id = Column('recipient_id', Integer(), nullable=False)
+    unread = Column('unread', Boolean(), DefaultClause('True'), nullable=False)
+    created_at = Column('created_at', TIMESTAMP(), nullable=False)
+    updated_at = Column('updated_at', TIMESTAMP(), nullable=False)
+    type = Column('type', String(255), nullable=True)
+
+Index('idx_notifications_recipient_id', NotificationBase.recipient_id,
+      postgresql_using='btree')
+Index('idx_notifications_target_id', NotificationBase.target_id,
+      postgresql_using='btree')
+Index('idx_notifications_target_type_target_id', NotificationBase.target_type,
+      NotificationBase.target_id, postgresql_using='btree')
+
+
 # TODO: Follow that doc
 # http://stackoverflow.com/questions/6151084/which-timestamp-type-should-i-choose-in-a-postgresql-database
 # http://stackoverflow.com/questions/13677781/getting-sqlalchemy-to-issue-create-schema-on-create-all
