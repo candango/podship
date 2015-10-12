@@ -399,6 +399,51 @@ Index('idx_notifications_target_type_target_id', NotificationBase.target_type,
       NotificationBase.target_id, postgresql_using='btree')
 
 
+class OEmbedCache(Base):
+
+    __tablename__ = 'o_embed_caches'
+
+    id = Column('id', Integer(), primary_key=True)
+    url = Column('url', String(1024), nullable=False)
+    data = Column('data', Text(), nullable=False)
+
+Index('idx_o_embed_caches_url', OEmbedCache.url, postgresql_using='btree')
+
+
+class OpenGraphCache(Base):
+
+    __tablename__ = 'open_graph_caches'
+
+    id = Column('id', Integer(), primary_key=True)
+    title = Column('title', String(255), nullable=True)
+    ob_type = Column('ob_type', String(255), nullable=True)
+    image = Column('image', Text(), nullable=True)
+    url = Column('url', Text(), nullable=True)
+    description = Column('description', Text(), nullable=True)
+
+
+class Participation(Base):
+
+    __tablename__ = 'participations'
+
+    id = Column('id', Integer(), primary_key=True)
+    guid = Column('guid', String(255), nullable=True)
+    target_id = Column('target_id', Integer(), nullable=True)
+    target_type = Column('target_type', String(60), nullable=False)
+    author_id = Column('author_id', Integer(), nullable=True)
+    author_signature = Column('author_signature', Text(),
+                              nullable=True)
+    parent_author_signature = Column('parent_author_signature', Text(),
+                                     nullable=True)
+    created_at = Column('created_at', TIMESTAMP(), nullable=False)
+    updated_at = Column('updated_at', TIMESTAMP(), nullable=False)
+
+Index('idx_participations_guid', Participation.guid, postgresql_using='btree')
+Index('idx_participations_target_id_target_type_author_id',
+      Participation.target_id, Participation.target_type,
+      Participation.author_id, postgresql_using='btree')
+
+
 # TODO: Follow that doc
 # http://stackoverflow.com/questions/6151084/which-timestamp-type-should-i-choose-in-a-postgresql-database
 # http://stackoverflow.com/questions/13677781/getting-sqlalchemy-to-issue-create-schema-on-create-all
