@@ -343,8 +343,6 @@ class MessageBase(Base):
                        nullable=False)
     guid = Column('guid', String(255), nullable=False)
     text = Column('text', Text(), nullable=False)
-    parent_author_signature = Column('parent_author_signature', Text(),
-                                     nullable=True)
     created_at = Column('created_at', TIMESTAMP(), nullable=False)
     updated_at = Column('updated_at', TIMESTAMP(), nullable=False)
     author_signature = Column('author_signature', Text(),
@@ -580,7 +578,7 @@ class PostBase(Base):
     diaspora_handle = Column('diaspora_handle', String(255), nullable=True)
     guid = Column('guid', String(255), nullable=False)
     pending = Column('pending', Boolean(), DefaultClause('false'),
-                    nullable=False)
+                     nullable=False)
     type = Column('type', String(40), nullable=False)
     text = Column('text', Text(), nullable=True)
     remote_photo_path = Column('remote_photo_path', Text(), nullable=True)
@@ -619,7 +617,7 @@ class PostBase(Base):
     tumblr_ids = Column('tumblr_ids', Text(), nullable=True)
 
 Index('idx_posts_author_id_root_guid', PostBase.author_id,
-      PostBase.root_guid, unique= True, postgresql_using='btree')
+      PostBase.root_guid, unique=True, postgresql_using='btree')
 Index('idx_posts_guid', PostBase.guid, unique=True,
       postgresql_using='btree')
 Index('idx_posts_author_id', PostBase.author_id, postgresql_using='btree')
@@ -755,6 +753,77 @@ Index('idx_share_visibilities_shareable_id_shareable_type_hidden_conta',
       postgresql_using='btree')
 
 
+class SimpleCaptchaDataBase(Base):
+
+    __tablename__ = 'simple_captcha_data'
+
+    id = Column('id', Integer(), primary_key=True)
+    key = Column('key', String(40), nullable=True)
+    value = Column('value', String(12), nullable=True)
+    created_at = Column('created_at', TIMESTAMP(), nullable=True)
+    updated_at = Column('updated_at', TIMESTAMP(), nullable=True)
+
+Index('idx_simple_captcha_data_key', SimpleCaptchaDataBase.key,
+      postgresql_using='btree')
+
+
+class TagFollowingBase(Base):
+
+    __tablename__ = 'tag_followings'
+
+    id = Column('id', Integer(), primary_key=True)
+    # TODO: No fks here too?!
+    tag_id = Column('tag_id', Integer(), nullable=False)
+    user_id = Column('user_id', Integer(), nullable=False)
+    created_at = Column('created_at', TIMESTAMP(), nullable=False)
+    updated_at = Column('updated_at', TIMESTAMP(), nullable=False)
+
+Index('idx_tag_followings_tag_id_user_id', TagFollowingBase.tag_id,
+      TagFollowingBase.user_id, unique=True, postgresql_using='btree')
+Index('idx_tag_followings_tag_id', TagFollowingBase.tag_id,
+      postgresql_using='btree')
+Index('idx_tag_followings_user_id', TagFollowingBase.user_id,
+      postgresql_using='btree')
+
+
+class TaggingBase(Base):
+
+    __tablename__ = 'taggings'
+
+    id = Column('id', Integer(), primary_key=True)
+    # TODO: No fks here too?!
+    tag_id = Column('tag_id', Integer(), nullable=True)
+    taggable_id = Column('taggable_id', Integer(), nullable=True)
+    taggable_type = Column('taggable_type', String(127), nullable=True)
+    tagger_id = Column('tagger_id', Integer(), nullable=True)
+    tagger_type = Column('tagger_type', String(127), nullable=True)
+    context = Column('context', String(127), nullable=True)
+    created_at = Column('created_at', TIMESTAMP(), nullable=True)
+
+Index('idx_taggings_taggable_id_taggable_type_tag_id', TaggingBase.taggable_id,
+      TaggingBase.taggable_type, TaggingBase.tag_id, unique=True,
+      postgresql_using='btree')
+Index('idx_taggings_created_at', TaggingBase.created_at,
+      postgresql_using='btree')
+Index('idx_taggings_tag_id', TaggingBase.tag_id, postgresql_using='btree')
+Index('idx_taggings_taggable_id_taggable_type_context',
+      TaggingBase.taggable_id, TaggingBase.taggable_type, TaggingBase.context,
+      postgresql_using='btree')
+
+
+class TagBase(Base):
+
+    __tablename__ = 'tags'
+
+    id = Column('id', Integer(), primary_key=True)
+    name = Column('name', String(255), nullable=True)
+    taggings_count = Column('taggings_count', Integer(), DefaultClause('0'),
+                            nullable=True)
+
+Index('idx_tags_name', TagBase.name, unique=True,
+      postgresql_using='btree')
+
+
 # TODO: Follow that doc
 # http://stackoverflow.com/questions/6151084/which-timestamp-type-should-i-choose-in-a-postgresql-database
 # http://stackoverflow.com/questions/13677781/getting-sqlalchemy-to-issue-create-schema-on-create-all
@@ -841,13 +910,3 @@ class UserPreferenceBase(Base):
     user_id = Column('user_id', Integer(), ForeignKey('users.id'), nullable=True)
     created_at = Column('created_at', TIMESTAMP(), nullable=False)
     updated_at = Column('updated_at', TIMESTAMP(), nullable=False)
-
-
-class TagBase(Base):
-
-    __tablename__ = 'tags'
-
-    id = Column('id', Integer(), primary_key=True)
-    name = Column('name', String(255), nullable=False)
-    taggings_count = Column('taggings_count', Integer(), DefaultClause('0'),
-                            nullable=False)
