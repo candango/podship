@@ -189,13 +189,52 @@ class ContactBase(Base):
     created_at = Column('created_at', TIMESTAMP(), nullable=False)
     updated_at = Column('updated_at', TIMESTAMP(), nullable=False)
     sharing = Column('sharing', Boolean(),
-                     DefaultClause('False'),nullable=False)
+                     DefaultClause('False'), nullable=False)
     receiving = Column('receiving', Boolean(),
-                       DefaultClause('False'),nullable=False)
+                       DefaultClause('False'), nullable=False)
 
 Index('idx_contacts_user_id_person_id', ContactBase.user_id,
       ContactBase.person_id, unique=True, postgresql_using='btree')
 Index('idx_contacts_person_id', ContactBase.person_id,
+      postgresql_using='btree')
+
+
+class ConversationVisibilityBase(Base):
+
+    __tablename__ = 'conversation_visibilities'
+
+    id = Column('id', Integer(), primary_key=True)
+    conversation_id = Column('conversation_id', Integer(),
+                             ForeignKey('conversations.id'), nullable=False)
+    person_id = Column('person_id', Integer(), ForeignKey('people.id'),
+                       nullable=False)
+    unread = Column('unread', Integer(), DefaultClause('0'), nullable=False)
+    created_at = Column('created_at', TIMESTAMP(), nullable=False)
+    updated_at = Column('updated_at', TIMESTAMP(), nullable=False)
+
+Index('idx_conversation_visibilities_conversation_id_person_id',
+      ConversationVisibilityBase.conversation_id,
+      ConversationVisibilityBase.person_id, unique=True,
+      postgresql_using='btree')
+Index('idx_conversation_visibilities_conversation_id',
+      ConversationVisibilityBase.conversation_id, postgresql_using='btree')
+Index('idx_conversation_visibilities_person_id',
+      ConversationVisibilityBase.person_id, postgresql_using='btree')
+
+
+class ConversationBase(Base):
+
+    __tablename__ = 'conversations'
+
+    id = Column('id', Integer(), primary_key=True)
+    subject = Column('subject', String(255), nullable=True)
+    guid = Column('guid', String(255), nullable=False)
+    author_id = Column('author_id', Integer(), ForeignKey('people.id'),
+                       nullable=False)
+    created_at = Column('created_at', TIMESTAMP(), nullable=False)
+    updated_at = Column('updated_at', TIMESTAMP(), nullable=False)
+
+Index('idx_conversations_author_id', ConversationBase.author_id,
       postgresql_using='btree')
 
 
