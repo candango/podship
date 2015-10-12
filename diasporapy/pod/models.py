@@ -218,15 +218,19 @@ class AspectBase(Base):
 
     id = Column('id', Integer(), primary_key=True)
     name = Column('name', String(255), nullable=False)
+    # TODO: Diaspora don't set this as FK. Why?
     user_id = Column('user_id', Integer(), nullable=False)
     created_at = Column('created_at', TIMESTAMP(), nullable=False)
     updated_at = Column('updated_at', TIMESTAMP(), nullable=False)
     contacts_visible = Column('contacts_visible', Boolean(),
-                              DefaultClause('True'), nullable=True)
+                              DefaultClause('True'), nullable=False)
     order_id = Column('order_id', Integer(), nullable=True)
     chat_enabled = Column('chat_enabled', Boolean(),
                           DefaultClause('False'), nullable=True)
 
+Index('idx_aspects_user_id', AspectBase.user_id, postgresql_using='btree')
+Index('idx_aspects_user_id_contacts_visible', AspectBase.user_id,
+      AspectBase.contacts_visible, postgresql_using='btree')
 
 class BlockBase(Base):
 
