@@ -1,7 +1,25 @@
+{% extends "pod:base.html" %}
+
+{% block page_title %}
+Sing in into your Administrator account
+{% end %}
+
+{% block page_css %}
+{% end %}
+
+{% block menu %}
+{% end %}
+
+{% block content %}
 <h1>Digae Social Network</h1>
 
 <a href="/account/login">Login</a>
 <a href="/account/register">Register</a>
+{% end %}
 
+{% block page_js_files %}
+{% end %}
 
-<footer>We are *diaspora federated!</footer>
+{% block page_js %}
+    <script src="/static/js/login.js"></script>
+{% end %}
