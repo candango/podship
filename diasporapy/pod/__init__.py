@@ -27,6 +27,7 @@ class PodComponent(firenado.core.TornadoComponent):
     def get_handlers(self):
         return [
             (r'/', handlers.IndexHandler),
+            (r'/locales/([A-Za-z0-9-_]+).json?', handlers.LocaleHandler),
             (r'/stream', handlers.StreamHandler),
             (r"/assets/bootstrap/(.*)", tornado.web.StaticFileHandler,
              {"path": os.path.join(self.get_component_path(), '..',

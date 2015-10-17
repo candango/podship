@@ -25,6 +25,33 @@ class IndexHandler(firenado.core.TornadoHandler):
         self.render('index.html')
 
 
+class LocaleHandler(firenado.core.TornadoHandler):
+    """ Returns the locale json to be used by the javascript """
+    def get(self, lang):
+        # TODO: Add to a service
+        locale = {
+            "app": {
+                "project": "diaspora*py"
+            },
+            "common": {
+                "password": "Password",
+                "username": "Username",
+                "create": "Create",
+                "add": "Add",
+                "remove": "Remove",
+                "delete": "Clear",
+                "cancel": "Cancel",
+                "save": "Save",
+                "email": "E-mail",
+                "search": "Search",
+                "login": "Login",
+                "register": "Register",
+                "logged": "Logged in as <a href='/login' class='navbar-link'>$t(common.username)</a>"
+            },
+            "layout": {}
+        }
+        self.write(locale)
+
 class StreamHandler(firenado.core.TornadoHandler):
 
     def get(self):
