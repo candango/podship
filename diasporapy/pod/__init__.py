@@ -16,10 +16,11 @@
 #
 # vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4:
 
-from diasporapy.pod import handlers
 import firenado.core
 import tornado.web
 import os
+
+from diasporapy.pod import handlers
 
 
 class PodComponent(firenado.core.TornadoComponent):
@@ -44,10 +45,7 @@ class PodComponent(firenado.core.TornadoComponent):
         ]
 
     def install(self):
-        import diasporapy.pod.models as models
         from firenado.util.sqlalchemy_util import Base
-        import uuid
-        import datetime
 
         print 'Installing Diasporapy Pod...'
 

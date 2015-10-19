@@ -16,9 +16,9 @@
 #
 # vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4:
 
-import bcrypt
 from firenado.core.service import FirenadoService
-from diasporapy.pod.models import UserBase
+
+from diasporapy.models import UserBase
 
 
 class RegisterService(FirenadoService):
