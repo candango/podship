@@ -75,3 +75,6 @@ class UserService(service.FirenadoService):
         user.exported_photos_file = None
         user.exported_photos_at = None
         user.exporting_photos = False
+        session = self.get_data_source('pod').get_connection()['session']
+        session.add(user)
+        session.commit()

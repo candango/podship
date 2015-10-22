@@ -957,7 +957,6 @@ class UserBase(Base):
                                 nullable=True)
     exporting_photos = Column('exporting_photos', Boolean(),
                               DefaultClause('False'), nullable=True)
-    preferences = relationship("UserPreferenceBase", backref="user")
 
 Index('idx_users_authentication_token', UserBase.authentication_token,
       unique=True, postgresql_using='btree')

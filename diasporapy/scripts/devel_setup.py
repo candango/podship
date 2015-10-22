@@ -19,9 +19,11 @@
 from __future__ import (absolute_import, division, print_function,
                         with_statement)
 
-import os
+from diasporapy.services.account import AccountService, UserService
 import firenado.conf
 import firenado.core
+from firenado.core.service import served_by
+import os
 
 # Setting pod dir
 test_dirname, filename = os.path.split(os.path.abspath(__file__))
@@ -34,6 +36,15 @@ reload(firenado.conf)
 application = firenado.core.TornadoApplication()
 
 
+class DevSetupExec:
+
+    def __init__(self, application):
+        self.application = application
+
+    @served_by(UserService)
+    def create_accounts(self):
+        self.user_service.create('test', 'test', 'test')
 
 
-print(application.data_sources)
+dev_setup_exec = DevSetupExec(application)
+dev_setup_exec.create_accounts()
