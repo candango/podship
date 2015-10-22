@@ -46,14 +46,14 @@ class PodComponent(firenado.core.TornadoComponent):
 
     def install(self):
         from firenado.util.sqlalchemy_util import Base
+        import diasporapy.models
 
         print 'Installing Diasporapy Pod...'
 
         print 'Creating Pod ...'
 
-        print self.application.get_data_source('pod').get_connection()
-
-        engine = self.application.get_data_source('pod').get_connection()['engine']
+        engine = self.application.get_data_source(
+            'pod').get_connection()['engine']
         engine.echo = True
 
         # Dropping all
@@ -61,13 +61,6 @@ class PodComponent(firenado.core.TornadoComponent):
         Base.metadata.drop_all(engine)
         # Creating database
         Base.metadata.create_all(engine)
-
-        #session = self.__get_connection_handler().get_connection()['session']
-
-        #session.commit()
-
-        #print 'Colony %s created at %s' % (
-            #base_colony.name, base_colony.created_at)
 
 
 if __name__ == '__main__':
