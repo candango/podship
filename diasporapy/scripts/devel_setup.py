@@ -19,7 +19,7 @@
 from __future__ import (absolute_import, division, print_function,
                         with_statement)
 
-from diasporapy.services.account import AccountService, UserService
+from diasporapy.services.account import AccountService
 import firenado.conf
 import firenado.core
 from firenado.core.service import served_by
@@ -41,10 +41,11 @@ class DevSetupExec:
     def __init__(self, application):
         self.application = application
 
-    @served_by(UserService)
+    @served_by(AccountService)
     def create_accounts(self):
-        self.user_service.create('test', 'test', 'test')
+        self.account_service.register('test', 'test@test.ts', 'test')
 
 
 dev_setup_exec = DevSetupExec(application)
 dev_setup_exec.create_accounts()
+
