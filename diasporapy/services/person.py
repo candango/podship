@@ -20,22 +20,28 @@
 from __future__ import (absolute_import, division, print_function,
                         with_statement)
 
-from diasporapy.services.user import UserService
-from diasporapy.services.profile import ProfileService
-from diasporapy.services.person import PersonService
+import datetime
+from diasporapy.models import PersonBase
 from firenado.core import service
 
 
-class AccountService(service.FirenadoService):
+class PersonService(service.FirenadoService):
 
-    @service.served_by(UserService)
-    @service.served_by(PersonService)
-    @service.served_by(ProfileService)
-    def register(self, user_name, email, password):
-        user = self.user_service.create(user_name, email, password)
-        person_data={}
-        person_data['user'] = user
-        person = self.person_service.create(person_data)
-        profile_data={}
-        profile_data['person'] = person
-        profile = self.profile_service.create(profile_data)
+    def create(self, person_data):
+        person = PersonBase()
+        person.guid = ''
+        person.url = ''
+        person.diaspora_handle = ''
+        person.serialized_public_key = ''
+        if person_data['user']:
+            person.owner_id = person_data['user'].id
+        person.created_at = datetime.datetime.utcnow()
+        person.updated_at = datetime.datetime.utcnow()
+        person.closed_account = False
+        person.fetch_status = 0
+
+        session = self.get_data_source('pod').get_connection()['session']
+        session.add(person)
+        session.commit()
+
+        return person

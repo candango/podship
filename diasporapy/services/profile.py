@@ -20,20 +20,41 @@
 from __future__ import (absolute_import, division, print_function,
                         with_statement)
 
+import datetime
 from diasporapy.models import ProfileBase
 from firenado.core import service
 
 
 class ProfileService(service.FirenadoService):
 
-    def create(self, person, first_name, last_name):
+    def create(self, profile_data):
         """
-        Creates a new diasporapy profile.
 
-        :param user:
-        :return: boolean
+        :param person:
+        :param first_name:
+        :param last_name:
+        :return:
         """
         profile = ProfileBase()
-        profile.first_name = first_name
-        profile.last_name = last_name
-        profile.person_id = person.id
+        profile.first_name = profile_data['first_name']
+        profile.last_name = profile_data['last_name']
+        profile.image_url = ''
+        profile.image_url_small = ''
+        profile.image_url_medium = ''
+        profile.birthday = None
+        profile.gender = ''
+        profile.bio = ''
+        profile.searchable = True
+        # TODO: this should be filled at the beginning
+        profile.person_id = profile_data['person'].id
+        profile.created_at = datetime.datetime.utcnow()
+        profile.updated_at = datetime.datetime.utcnow()
+        profile.location = ''
+        profile.full_name = ''
+        profile.nsfw = False
+
+        session = self.get_data_source('pod').get_connection()['session']
+        session.add(profile)
+        session.commit()
+
+        return profile

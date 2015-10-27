@@ -78,3 +78,5 @@ class UserService(service.FirenadoService):
         session = self.get_data_source('pod').get_connection()['session']
         session.add(user)
         session.commit()
+
+        return user
