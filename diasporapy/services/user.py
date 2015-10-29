@@ -24,6 +24,8 @@ from diasporapy.models import UserBase
 from firenado.core import service
 from firenado.util import random_string
 import datetime
+from sqlalchemy.orm.exc import NoResultFound
+from Crypto.PublicKey import RSA
 
 
 class UserService(service.FirenadoService):
@@ -80,3 +82,36 @@ class UserService(service.FirenadoService):
         session.commit()
 
         return user
+
+    def get_by_user_name(self, user_name):
+        auth_user = None
+        session = self.get_data_source('pod').get_connection()['session']
+        try:
+            auth_user = session.query(UserBase).filter(
+                UserBase.user_name == user_name).one()
+        except NoResultFound:
+            pass
+        return auth_user
+
+    def generate_key(self, passphrase):
+        """ FROM pyraspora: pyaspora.user.models
+        Generate a 2048-bit RSA key. The key will be stored in the User
+        object. The private key will be protected with password <passphrase>,
+        which is usually the user password.
+        """
+        # TODO: I don't know if this is the way diaspora is handling the key
+        # Let's keep this way by now
+        # TODO: looks like this method is candidate to be part of some security
+        # toolkit
+
+        RSAkey = RSA.generate(2048)
+
+        private_key = RSAkey.exportKey(
+            format='PEM',
+            pkcs=1,
+            passphrase=passphrase
+        ).decode("ascii")
+        return RSAkey.publickey().exportKey(
+            format='PEM',
+            pkcs=1
+        ).decode("ascii")
