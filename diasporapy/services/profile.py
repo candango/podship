@@ -27,7 +27,7 @@ from firenado.core import service
 
 class ProfileService(service.FirenadoService):
 
-    def create(self, profile_data):
+    def create(self, profile_data, created_utc=None):
         """
 
         :param person:
@@ -35,6 +35,9 @@ class ProfileService(service.FirenadoService):
         :param last_name:
         :return:
         """
+        if not created_utc:
+            created_utc = datetime.datetime.utcnow()
+
         profile = ProfileBase()
         profile.first_name = profile_data['first_name']
         profile.last_name = profile_data['last_name']
@@ -47,8 +50,8 @@ class ProfileService(service.FirenadoService):
         profile.searchable = True
         # TODO: this should be filled at the beginning
         profile.person_id = profile_data['person'].id
-        profile.created_at = datetime.datetime.utcnow()
-        profile.updated_at = datetime.datetime.utcnow()
+        profile.created_at = created_utc
+        profile.updated_at = created_utc
         profile.location = ''
         profile.full_name = ''
         profile.nsfw = False

@@ -30,18 +30,21 @@ from Crypto.PublicKey import RSA
 
 class UserService(service.FirenadoService):
 
-    def create(self, user_name, email, password):
+    def create(self, user_data, created_utc=None):
+        if not created_utc:
+            created_utc = datetime.datetime.utcnow()
+
         user = UserBase()
-        user.user_name = user_name
+        user.user_name = user_data['user_name']
         # TODO: Generate the serialized private key
-        user.serialized_private_key = ''
+        user.serialized_private_key = self.generate_key(user_data['password'])
         user.getting_started = True
         user.disable_mail = False
         # TODO: Handle language
         user.language = 'en'
-        user.email = email
+        user.email = user_data['email']
         # TODO: encrypt the password
-        user.encrypted_password = password
+        user.encrypted_password = user_data['password']
         # Not used
         user.invitation_token = None
         user.invitation_sent_at = None
@@ -51,8 +54,8 @@ class UserService(service.FirenadoService):
         user.last_sign_in_at = None
         user.current_sign_in_ip = None
         user.last_sign_in_ip = None
-        user.created_at = datetime.datetime.utcnow()
-        user.updated_at = datetime.datetime.utcnow()
+        user.created_at = created_utc
+        user.updated_at = created_utc
         user.invitation_service = None
         user.invitation_identifier = None
         user.invitation_limit = None

@@ -20,6 +20,7 @@
 from __future__ import (absolute_import, division, print_function,
                         with_statement)
 
+import datetime
 from diasporapy.services.user import UserService
 from diasporapy.services.profile import ProfileService
 from diasporapy.services.person import PersonService
@@ -32,10 +33,18 @@ class AccountService(service.FirenadoService):
     @service.served_by(PersonService)
     @service.served_by(ProfileService)
     def register(self, user_name, email, password):
-        user = self.user_service.create(user_name, email, password)
+        created_utc = datetime.datetime.utcnow()
+        user_data = {
+            'user_name': user_name,
+            'email': email,
+            'password': password,
+        }
+        user = self.user_service.create(user_data, created_utc=created_utc)
         person_data={}
         person_data['user'] = user
-        person = self.person_service.create(person_data)
+        person = self.person_service.create(
+            person_data,created_utc=created_utc)
         profile_data={}
         profile_data['person'] = person
-        profile = self.profile_service.create(profile_data)
+        profile = self.profile_service.create(
+            profile_data, created_utc=created_utc)

@@ -23,20 +23,27 @@ from __future__ import (absolute_import, division, print_function,
 import datetime
 from diasporapy.models import PersonBase
 from firenado.core import service
+import uuid
 
 
 class PersonService(service.FirenadoService):
 
-    def create(self, person_data):
+    def create(self, person_data, created_utc=None):
+        if not created_utc:
+            created_utc = datetime.datetime.utcnow()
+
         person = PersonBase()
-        person.guid = ''
+        # TODO: It looks like the guid should be generated based on a random
+        # string. This generation based on the timestamp is not correct and
+        # should be fixed.
+        person.guid = str(uuid.uuid5(uuid.NAMESPACE_URL, created_utc))
         person.url = ''
         person.diaspora_handle = ''
         person.serialized_public_key = ''
         if person_data['user']:
             person.owner_id = person_data['user'].id
-        person.created_at = datetime.datetime.utcnow()
-        person.updated_at = datetime.datetime.utcnow()
+        person.created_at = created_utc
+        person.updated_at = created_utc
         person.closed_account = False
         person.fetch_status = 0
 
