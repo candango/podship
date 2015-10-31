@@ -17,8 +17,6 @@
 # vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4:
 
 import firenado.core
-import tornado.web
-import os
 
 from diasporapy.pod import handlers
 
@@ -30,18 +28,6 @@ class PodComponent(firenado.core.TornadoComponent):
             (r'/', handlers.IndexHandler),
             (r'/locales/([A-Za-z0-9-_]+).json?', handlers.LocaleHandler),
             (r'/stream', handlers.StreamHandler),
-            (r"/assets/bootstrap/(.*)", tornado.web.StaticFileHandler,
-             {"path": os.path.join(self.get_component_path(), '..',
-                                   'bower_components', 'bootstrap', 'dist')}),
-            (r"/assets/canjs/(.*)", tornado.web.StaticFileHandler,
-             {"path": os.path.join(self.get_component_path(), '..',
-                                   'bower_components', 'canjs')}),
-            (r"/assets/jquery/(.*)", tornado.web.StaticFileHandler,
-             {"path": os.path.join(self.get_component_path(), '..',
-                                   'bower_components', 'jquery', 'dist')}),
-            (r"/assets/i18next/(.*)", tornado.web.StaticFileHandler,
-             {"path": os.path.join(self.get_component_path(), '..',
-                                   'bower_components', 'i18next')}),
         ]
 
     def install(self):
@@ -61,11 +47,3 @@ class PodComponent(firenado.core.TornadoComponent):
         Base.metadata.drop_all(engine)
         # Creating database
         Base.metadata.create_all(engine)
-
-
-if __name__ == '__main__':
-    import firenado.conf
-    from firenado.core import TornadoApplication
-
-    app = TornadoApplication()
-    app.components['pod'].install()
