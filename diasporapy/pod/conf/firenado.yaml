@@ -29,6 +29,8 @@ components:
   - id: user
     class: diasporapy.pod.components.user.UserComponent
     enabled: true
+  - id: assets
+    enabled: true
   #- id: admin
   #  enabled: true
   #- id: info
