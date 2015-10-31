@@ -30,15 +30,6 @@ class PodComponent(firenado.core.TornadoComponent):
             (r'/', handlers.IndexHandler),
             (r'/locales/([A-Za-z0-9-_]+).json?', handlers.LocaleHandler),
             (r'/stream', handlers.StreamHandler),
-            (r"/assets/canjs/(.*)", tornado.web.StaticFileHandler,
-             {"path": os.path.join(self.get_component_path(), '..',
-                                   'bower_components', 'canjs')}),
-            (r"/assets/jquery/(.*)", tornado.web.StaticFileHandler,
-             {"path": os.path.join(self.get_component_path(), '..',
-                                   'bower_components', 'jquery', 'dist')}),
-            (r"/assets/i18next/(.*)", tornado.web.StaticFileHandler,
-             {"path": os.path.join(self.get_component_path(), '..',
-                                   'bower_components', 'i18next')}),
         ]
 
     def install(self):
