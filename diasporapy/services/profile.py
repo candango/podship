@@ -16,7 +16,6 @@
 #
 # vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4:
 
-
 from __future__ import (absolute_import, division, print_function,
                         with_statement)
 
@@ -27,7 +26,7 @@ from firenado.core import service
 
 class ProfileService(service.FirenadoService):
 
-    def create(self, profile_data, created_utc=None):
+    def create(self, profile_data, created_utc=None, session=None):
         """
 
         :param person:
@@ -38,9 +37,17 @@ class ProfileService(service.FirenadoService):
         if not created_utc:
             created_utc = datetime.datetime.utcnow()
 
+        first_name = None
+        last_name = None
+        if 'first_name' in profile_data:
+            first_name = profile_data['first_name']
+        if 'last_name' in profile_data:
+            last_name = profile_data['last_name']
+
         profile = ProfileBase()
-        profile.first_name = profile_data['first_name']
-        profile.last_name = profile_data['last_name']
+
+        profile.first_name = first_name
+        profile.last_name = last_name
         profile.image_url = ''
         profile.image_url_small = ''
         profile.image_url_medium = ''
@@ -56,8 +63,12 @@ class ProfileService(service.FirenadoService):
         profile.full_name = ''
         profile.nsfw = False
 
-        session = self.get_data_source('pod').get_connection()['session']
+        commit = False
+        if not session:
+            session = self.get_data_source('pod').get_connection()['session']
+            commit = True
         session.add(profile)
-        session.commit()
+        if commit:
+            session.commit()
 
         return profile

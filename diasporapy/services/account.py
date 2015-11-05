@@ -16,7 +16,6 @@
 #
 # vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4:
 
-
 from __future__ import (absolute_import, division, print_function,
                         with_statement)
 
@@ -29,22 +28,24 @@ from firenado.core import service
 
 class AccountService(service.FirenadoService):
 
+    def __init__(self, handler, data_source=None):
+        service.FirenadoService.__init__(self, handler, data_source)
+
     @service.served_by(UserService)
     @service.served_by(PersonService)
     @service.served_by(ProfileService)
-    def register(self, user_name, email, password):
+    def register(self, account_data):
+        session = self.get_data_source('pod').get_connection()['session']
         created_utc = datetime.datetime.utcnow()
-        user_data = {
-            'user_name': user_name,
-            'email': email,
-            'password': password,
-        }
-        user = self.user_service.create(user_data, created_utc=created_utc)
+        user = self.user_service.create(account_data['user_data'], created_utc=created_utc,
+                                        session=session)
         person_data={}
         person_data['user'] = user
         person = self.person_service.create(
-            person_data,created_utc=created_utc)
+            person_data,created_utc=created_utc, session=session)
+        session.commit()
         profile_data={}
         profile_data['person'] = person
         profile = self.profile_service.create(
-            profile_data, created_utc=created_utc)
+            profile_data, created_utc=created_utc, session=session)
+        session.commit()
