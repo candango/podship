@@ -16,7 +16,6 @@
 #
 # vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4:
 
-
 from __future__ import (absolute_import, division, print_function,
                         with_statement)
 
@@ -28,7 +27,7 @@ import uuid
 
 class PersonService(service.FirenadoService):
 
-    def create(self, person_data, created_utc=None):
+    def create(self, person_data, created_utc=None, session=None):
         if not created_utc:
             created_utc = datetime.datetime.utcnow()
 
@@ -36,7 +35,7 @@ class PersonService(service.FirenadoService):
         # TODO: It looks like the guid should be generated based on a random
         # string. This generation based on the timestamp is not correct and
         # should be fixed.
-        person.guid = str(uuid.uuid5(uuid.NAMESPACE_URL, created_utc))
+        person.guid = str(uuid.uuid5(uuid.NAMESPACE_URL, str(created_utc)))
         person.url = ''
         person.diaspora_handle = ''
         person.serialized_public_key = ''
@@ -46,9 +45,12 @@ class PersonService(service.FirenadoService):
         person.updated_at = created_utc
         person.closed_account = False
         person.fetch_status = 0
-
-        session = self.get_data_source('pod').get_connection()['session']
+        commit = False
+        if not session:
+            session = self.get_data_source('pod').get_connection()['session']
+            commit = True
         session.add(person)
-        session.commit()
+        if commit:
+            session.commit()
 
         return person

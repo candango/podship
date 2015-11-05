@@ -16,7 +16,6 @@
 #
 # vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4:
 
-
 from __future__ import (absolute_import, division, print_function,
                         with_statement)
 
@@ -30,7 +29,7 @@ from Crypto.PublicKey import RSA
 
 class UserService(service.FirenadoService):
 
-    def create(self, user_data, created_utc=None):
+    def create(self, user_data, created_utc=None, session=None):
         if not created_utc:
             created_utc = datetime.datetime.utcnow()
 
@@ -80,9 +79,14 @@ class UserService(service.FirenadoService):
         user.exported_photos_file = None
         user.exported_photos_at = None
         user.exporting_photos = False
-        session = self.get_data_source('pod').get_connection()['session']
+
+        commit = False
+        if not session:
+            session = self.get_data_source('pod').get_connection()['session']
+            commit = True
         session.add(user)
-        session.commit()
+        if commit:
+            session.commit()
 
         return user
 
