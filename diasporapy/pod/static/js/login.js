@@ -1,10 +1,10 @@
 AdminLoginModel = can.Model({
-    create : "POST /admin/login"
+    create : "POST /account/login"
 },{});
 
 var AdminLoginApp = can.Control.extend({
     defaults: {
-        view:'/static/js/views/login_form.ejs'
+        view:'/static/js/views/login_form.stache'
     }
 },{
    init: function() {
@@ -29,14 +29,17 @@ var AdminLoginApp = can.Control.extend({
             },
             function(response) {
                 var errorMessage = '';
-                if(!response.responseJSON.has_user_name) {
+                if(response.responseJSON.errors.hasOwnProperty('username')) {
                     $('#userNameFormGroup').addClass('has-error');
                 }
-                if(!response.responseJSON.has_user_password) {
+                if(response.responseJSON.errors.hasOwnProperty('password')) {
                     $('#passwordFormGroup').addClass('has-error');
                 }
-                response.responseJSON.sources.forEach(
+                var errors = new can.Map(response.responseJSON.errors);
+
+                errors.each(
                     function(element, index, list) {
+                        console.debug(element, index, list);
                         var source = new can.Map(list[index]);
                         var keys = can.Map.keys(source);
                         errorMessage += source.attr(keys[0]) + '<br>';
