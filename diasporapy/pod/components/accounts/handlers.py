@@ -19,6 +19,18 @@
 import firenado.core
 from firenado.core.service import served_by
 
+from wtforms.fields import StringField, PasswordField
+from wtforms.validators import DataRequired
+from wtforms_tornado import Form
+
+import six
+
+
+class LoginForm(Form):
+
+    username = StringField(validators=[DataRequired()])
+    password = PasswordField(validators=[DataRequired()])
+
 
 class LoginHandler(firenado.core.TornadoHandler):
 
@@ -26,6 +38,17 @@ class LoginHandler(firenado.core.TornadoHandler):
     def get(self):
         self.render('pod:accounts/login.html',
                     message=self.accounts_service.get_message('User Login'))
+
+    def post(self):
+        form = LoginForm(self.request.arguments)
+        error_data = {}
+        error_data['errors'] = {}
+        if form.validate():
+            print(form.data)
+        else:
+            self.set_status(401)
+            error_data['errors'].update(form.errors)
+            self.write(error_data)
 
 
 class RegisterHandler(firenado.core.TornadoHandler):
