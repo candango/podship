@@ -43,7 +43,14 @@ class DevSetupExec:
 
     @served_by(AccountService)
     def create_accounts(self):
-        self.account_service.register('test', 'test@test.ts', 'test')
+        account_data = {}
+        account_data['user_data'] = {
+            'user_name': 'test',
+            'email': 'test@test.ts',
+            'password': 'test',
+        }
+
+        self.account_service.register(account_data)
 
 
 dev_setup_exec = DevSetupExec(application)
