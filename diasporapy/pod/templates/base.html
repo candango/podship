@@ -71,7 +71,7 @@
         </div>
         <!-- Placed at the end of the document so the pages load faster -->
         <script type="application/javascript">
-            steal("./jquery", function($){return $}).then("/bootstrap", function(bootstrap){return bootstrap});
+            steal("jquery", function($){steal("./bootstrap")});
             steal("./i18next", function(i18n){return i18n});
         </script>
         {% block page_js_files %}{% end %}
@@ -79,7 +79,7 @@
         {% block ejs %}{% end %}
         {% block page_js %}{% end %}
         <script type="application/javascript">
-            steal.done().then("locale");
+            steal("./locale");
         </script>
     </body>
 </html>

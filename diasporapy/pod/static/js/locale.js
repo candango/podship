@@ -1,4 +1,4 @@
-steal("./jquery", "./i18next", function($, i18n) {
+steal("jquery", "./i18next", function($, i18n) {
     $(function () {
         var option = {
             fallbackLng: false, lng: 'en',
@@ -6,7 +6,9 @@ steal("./jquery", "./i18next", function($, i18n) {
         }
         i18n.init(option, function (t) {
             // translate nav
-            $('.container').i18n();
+            steal.done().then(function(){
+                $('.container').i18n();
+            });
         });
     });
 });
