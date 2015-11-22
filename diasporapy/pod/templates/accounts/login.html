@@ -1,22 +1,24 @@
-{% extends "pod:login_base.html" %}
+{% extends "pod:base.html" %}
 
 {% block page_title %}
 Sing in into your Administrator account
 {% end %}
 
 {% block page_css %}
+<link rel="stylesheet" href="/static/css/diasporapy_pod.css">
 {% end %}
+
+{% block data_main %}login{% end %}
 
 {% block menu %}
 {% end %}
 
 {% block content %}
-<div class="login"></div>
+<div id="podLogin"></div>
 {% end %}
 
 {% block page_js_files %}
 {% end %}
 
 {% block page_js %}
-    <script src="/static/js/login.js"></script>
 {% end %}
