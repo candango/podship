@@ -8,7 +8,13 @@
         <link rel="stylesheet" href="/assets/bootstrap/css/bootstrap.min.css">
         <link rel="stylesheet" href="/assets/bootstrap/css/bootstrap-theme.min.css">
         <link rel="stylesheet" href="/static/css/diasporapy_pod.css">
+
         {% block page_css %}{% end %}
+
+        <script type="application/javascript" src="/assets/steal/steal.js"
+                config-path="/static/js/stealconfig.js"
+                data-main="{% block data_main %}{% end %}">
+        </script>
     </head>
     <body>
         <!-- Fixed navbar -->
@@ -64,15 +70,16 @@
             <footer>powered by diaspora*py</footer>
         </div>
         <!-- Placed at the end of the document so the pages load faster -->
-        <script src="/assets/jquery/jquery.min.js"></script>
-        <script src="/assets/bootstrap/js/bootstrap.min.js"></script>
-        <script src="/assets/canjs/can.jquery.min.js"></script>
-        <script src="/assets/i18next/i18next.min.js"></script>
-
+        <script type="application/javascript">
+            steal("./jquery", function($){return $}).then("/bootstrap", function(bootstrap){return bootstrap});
+            steal("./i18next", function(i18n){return i18n});
+        </script>
         {% block page_js_files %}{% end %}
 
         {% block ejs %}{% end %}
         {% block page_js %}{% end %}
-        <script src="/admin/static/js/locale.js"></script>
+        <script type="application/javascript">
+            steal.done().then("locale");
+        </script>
     </body>
 </html>
