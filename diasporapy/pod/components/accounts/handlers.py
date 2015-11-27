@@ -28,8 +28,10 @@ import six
 
 class LoginForm(Form):
 
-    username = StringField(validators=[DataRequired()])
-    password = PasswordField(validators=[DataRequired()])
+    username = StringField(validators=[DataRequired(
+        'The user name is required.')])
+    password = PasswordField(validators=[DataRequired(
+        'Password is required.')])
 
 
 class LoginHandler(firenado.core.TornadoHandler):
@@ -44,7 +46,12 @@ class LoginHandler(firenado.core.TornadoHandler):
         error_data = {}
         error_data['errors'] = {}
         if form.validate():
-            print(form.data)
+            response = {'status': 200}
+            #TODO: Add the id from database here
+            response['userid'] = 0
+            response['next_url'] = self.session.get('next_url')
+            response['password'] = ''
+            self.write(response)
         else:
             self.set_status(401)
             error_data['errors'].update(form.errors)
