@@ -11,11 +11,32 @@ steal("jquery", "can", "can/model", "can/view/stache", function($, can) {
             errorMessage: '',
             userNameError: false,
             passwordError: false,
-            login: new LoginModel()
+            login: new LoginModel(),
+            processLogin: function(login) {
+                window.location = login.next_url;
+            },
+            processLoginError: function(response) {
+                var errorMessage = '';
+                if(response.responseJSON.errors.hasOwnProperty('username')) {
+                    this.viewModel.attr('userNameError', true);
+                }
+                if(response.responseJSON.errors.hasOwnProperty('password')) {
+                    this.viewModel.attr('passwordError', true);
+                }
+                var errors = new can.Map(response.responseJSON.errors);
+                errors.each(
+                    function(element, index, list) {
+                        if(!this.viewModel.attr('error')){
+                            this.viewModel.attr('error', true);
+                        }
+                        errorMessage += element[0] + '<br>';
+                    }.bind(this)
+                );
+                this.viewModel.attr('errorMessage', errorMessage);
+            }
         },
         events: {
             "#login_button click": function() {
-                $('#form_login').data('component', this);
                 this.viewModel.attr('error', false);
                 this.viewModel.attr('errorMessage', '');
                 this.viewModel.attr('userNameError', false);
@@ -25,30 +46,8 @@ steal("jquery", "can", "can/model", "can/view/stache", function($, can) {
                 var parameters = [];
                 //values._xsrf = getCookie('_xsrf');
                 this.viewModel.login.attr(values).save(
-                    function(login, data) {
-                        window.location = login.next_url;
-                    },
-                    function(response) {
-                        var component = $('#form_login').data('component');
-                        $('#form_login').removeData('component');
-                        var errorMessage = '';
-                        if(response.responseJSON.errors.hasOwnProperty('username')) {
-                            component.viewModel.attr('userNameError', true);
-                        }
-                        if(response.responseJSON.errors.hasOwnProperty('password')) {
-                            component.viewModel.attr('passwordError', true);
-                        }
-                        var errors = new can.Map(response.responseJSON.errors);
-                        errors.each(
-                            function(element, index, list) {
-                                if(!component.viewModel.attr('error')) {
-                                    component.viewModel.attr('error', true);
-                                }
-                                errorMessage += element[0] + '<br>';
-                            }
-                        );
-                        component.viewModel.attr('errorMessage', errorMessage);
-                    }
+                    this.viewModel.processLogin.bind(this),
+                    this.viewModel.processLoginError.bind(this)
                 );
             }
         }
