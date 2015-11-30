@@ -19,15 +19,25 @@
 from __future__ import (absolute_import, division, print_function,
                         with_statement)
 
+from Crypto.PublicKey import RSA
+import datetime
 from diasporapy.models import UserBase
+from firenado.conf import load_yaml_config_file
 from firenado.core import service
 from firenado.util import random_string
-import datetime
 from sqlalchemy.orm.exc import NoResultFound
-from Crypto.PublicKey import RSA
+import os
 
 
 class UserService(service.FirenadoService):
+
+    def __init__(self, handler, data_source=None):
+        super(UserService, self).__init__(handler, data_source)
+        #self.security = load_yaml_config_file()
+        self.project_root = os.path.abspath(
+            os.path.join(os.path.dirname(os.path.abspath(__file__)), '..'))
+        self.security_conf = load_yaml_config_file(
+            os.path.join(self.project_root, 'conf', 'security.yml'))
 
     def create(self, user_data, created_utc=None, session=None):
         if not created_utc:
