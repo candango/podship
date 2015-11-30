@@ -39,8 +39,9 @@ class LoginHandler(firenado.core.TornadoHandler):
     @served_by('diasporapy.pod.components.account.services.AccountService')
     def get(self):
         self.render('pod:account/login.html',
-                    message=self.accounts_service.get_message('User Login'))
+                    message=self.account_service.get_message('User Login'))
 
+    @served_by('diasporapy.services.account.AccountService')
     def post(self):
         form = LoginForm(self.request.arguments)
         error_data = {}

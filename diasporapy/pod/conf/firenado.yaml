@@ -24,7 +24,7 @@ components:
     class: diasporapy.pod.PodComponent
     enabled: true
   - id: account
-    class: diasporapy.pod.components.account.AccountsComponent
+    class: diasporapy.pod.components.account.AccountComponent
     enabled: true
   - id: user
     class: diasporapy.pod.components.user.UserComponent
