@@ -47,12 +47,17 @@ class LoginHandler(firenado.core.TornadoHandler):
         error_data = {}
         error_data['errors'] = {}
         if form.validate():
-            response = {'status': 200}
-            #TODO: Add the id from database here
-            response['userid'] = 0
-            response['next_url'] = self.session.get('next_url')
-            response['password'] = ''
-            self.write(response)
+            is_valid_login = self.account_service.is_login_valid(form.data)
+            if is_valid_login:
+                response = {'status': 200}
+                response['userid'] = is_valid_login.id
+                response['next_url'] = self.session.get('next_url')
+                response['password'] = ''
+                self.write(response)
+            else:
+                self.set_status(401)
+                error_data['errors']['form'] = ['Invalid Login']
+                self.write(error_data)
         else:
             self.set_status(401)
             error_data['errors'].update(form.errors)

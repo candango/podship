@@ -19,7 +19,6 @@
 from __future__ import (absolute_import, division, print_function,
                         with_statement)
 
-import bcrypt
 import datetime
 from diasporapy.services.user import UserService
 from diasporapy.services.profile import ProfileService
@@ -51,3 +50,14 @@ class AccountService(service.FirenadoService):
         profile = self.profile_service.create(
             profile_data, created_utc=created_utc, db_session=db_session)
         db_session.commit()
+
+    @service.served_by(UserService)
+    def is_login_valid(self, login_data):
+        db_session = self.get_data_source('pod').get_connection()['session']
+        user = self.user_service.get_by_user_name(
+            login_data['username'], db_session)
+        if user:
+            if self.user_service.is_password_valid(
+                    login_data['password'], user.encrypted_password):
+                return user
+        return False
