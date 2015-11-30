@@ -19,6 +19,7 @@
 from __future__ import (absolute_import, division, print_function,
                         with_statement)
 
+import bcrypt
 from Crypto.PublicKey import RSA
 import datetime
 from diasporapy.models import UserBase
@@ -53,7 +54,9 @@ class UserService(service.FirenadoService):
         user.language = 'en'
         user.email = user_data['email']
         # TODO: encrypt the password
-        user.encrypted_password = user_data['password']
+        password = '%s%s' % (
+            user_data['password'], self.security_conf['password']['pepper'])
+        user.encrypted_password = bcrypt.hashpw(password, bcrypt.gensalt())
         # Not used
         user.invitation_token = None
         user.invitation_sent_at = None
@@ -92,12 +95,12 @@ class UserService(service.FirenadoService):
 
         commit = False
         if not db_session:
-            db_session = self.get_data_source('pod').get_connection()['session']
+            db_session = self.get_data_source(
+                'pod').get_connection()['session']
             commit = True
         db_session.add(user)
         if commit:
             db_session.commit()
-
         return user
 
     def get_by_user_name(self, user_name):
