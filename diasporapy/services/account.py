@@ -19,6 +19,7 @@
 from __future__ import (absolute_import, division, print_function,
                         with_statement)
 
+import bcrypt
 import datetime
 from diasporapy.services.user import UserService
 from diasporapy.services.profile import ProfileService
@@ -35,17 +36,18 @@ class AccountService(service.FirenadoService):
     @service.served_by(PersonService)
     @service.served_by(ProfileService)
     def register(self, account_data):
-        session = self.get_data_source('pod').get_connection()['session']
+        db_session = self.get_data_source('pod').get_connection()['session']
         created_utc = datetime.datetime.utcnow()
-        user = self.user_service.create(account_data['user_data'], created_utc=created_utc,
-                                        session=session)
-        person_data={}
+        user = self.user_service.create(account_data['user_data'],
+                                        created_utc=created_utc,
+                                        db_session=db_session)
+        person_data = {}
         person_data['user'] = user
         person = self.person_service.create(
-            person_data,created_utc=created_utc, session=session)
-        session.commit()
-        profile_data={}
+            person_data,created_utc=created_utc, db_session=db_session)
+        db_session.commit()
+        profile_data = {}
         profile_data['person'] = person
         profile = self.profile_service.create(
-            profile_data, created_utc=created_utc, session=session)
-        session.commit()
+            profile_data, created_utc=created_utc, db_session=db_session)
+        db_session.commit()

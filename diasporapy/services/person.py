@@ -27,7 +27,7 @@ import uuid
 
 class PersonService(service.FirenadoService):
 
-    def create(self, person_data, created_utc=None, session=None):
+    def create(self, person_data, created_utc=None, db_session=None):
         if not created_utc:
             created_utc = datetime.datetime.utcnow()
 
@@ -46,11 +46,11 @@ class PersonService(service.FirenadoService):
         person.closed_account = False
         person.fetch_status = 0
         commit = False
-        if not session:
+        if not db_session:
             session = self.get_data_source('pod').get_connection()['session']
             commit = True
-        session.add(person)
+        db_session.add(person)
         if commit:
-            session.commit()
+            db_session.commit()
 
         return person

@@ -39,7 +39,7 @@ class UserService(service.FirenadoService):
         self.security_conf = load_yaml_config_file(
             os.path.join(self.project_root, 'conf', 'security.yml'))
 
-    def create(self, user_data, created_utc=None, session=None):
+    def create(self, user_data, created_utc=None, db_session=None):
         if not created_utc:
             created_utc = datetime.datetime.utcnow()
 
@@ -91,12 +91,12 @@ class UserService(service.FirenadoService):
         user.exporting_photos = False
 
         commit = False
-        if not session:
-            session = self.get_data_source('pod').get_connection()['session']
+        if not db_session:
+            db_session = self.get_data_source('pod').get_connection()['session']
             commit = True
-        session.add(user)
+        db_session.add(user)
         if commit:
-            session.commit()
+            db_session.commit()
 
         return user
 
