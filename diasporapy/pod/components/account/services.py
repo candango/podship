@@ -19,7 +19,7 @@
 from firenado.core.service import FirenadoService
 
 
-class AccountsService(FirenadoService):
+class AccountService(FirenadoService):
 
     def get_message(self, message):
         return 'The message is: %s' % message

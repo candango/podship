@@ -18,10 +18,10 @@
 
 import firenado.core
 
-from diasporapy.pod.components.accounts import handlers
+from diasporapy.pod.components.account import handlers
 
 
-class AccountsComponent(firenado.core.TornadoComponent):
+class AccountComponent(firenado.core.TornadoComponent):
 
     def get_handlers(self):
         return [

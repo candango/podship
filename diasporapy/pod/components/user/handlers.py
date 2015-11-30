@@ -24,7 +24,7 @@ class LoginHandler(firenado.core.TornadoHandler):
 
     @served_by('diasporapy.pod.components.user.services.UserService')
     def get(self):
-        self.render('pod:user/accounts.html',
+        self.render('pod:user/account.html',
                     message=self.user_service.get_message('User Login'))
 
 
