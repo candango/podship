@@ -19,17 +19,28 @@
 from __future__ import (absolute_import, division, print_function,
                         with_statement)
 
+from Crypto.PublicKey import RSA
+import datetime
 from diasporapy.models import UserBase
+from firenado.conf import load_yaml_config_file
 from firenado.core import service
 from firenado.util import random_string
-import datetime
+from passlib.hash import bcrypt
 from sqlalchemy.orm.exc import NoResultFound
-from Crypto.PublicKey import RSA
+import os
 
 
 class UserService(service.FirenadoService):
 
-    def create(self, user_data, created_utc=None, session=None):
+    def __init__(self, handler, data_source=None):
+        super(UserService, self).__init__(handler, data_source)
+        #self.security = load_yaml_config_file()
+        self.project_root = os.path.abspath(
+            os.path.join(os.path.dirname(os.path.abspath(__file__)), '..'))
+        self.security_conf = load_yaml_config_file(
+            os.path.join(self.project_root, 'conf', 'security.yml'))
+
+    def create(self, user_data, created_utc=None, db_session=None):
         if not created_utc:
             created_utc = datetime.datetime.utcnow()
 
@@ -43,7 +54,8 @@ class UserService(service.FirenadoService):
         user.language = 'en'
         user.email = user_data['email']
         # TODO: encrypt the password
-        user.encrypted_password = user_data['password']
+        user.encrypted_password = bcrypt.encrypt(
+            self.get_peppered_password(user_data['password']))
         # Not used
         user.invitation_token = None
         user.invitation_sent_at = None
@@ -81,24 +93,33 @@ class UserService(service.FirenadoService):
         user.exporting_photos = False
 
         commit = False
-        if not session:
-            session = self.get_data_source('pod').get_connection()['session']
+        if not db_session:
+            db_session = self.get_data_source(
+                'pod').get_connection()['session']
             commit = True
-        session.add(user)
+        db_session.add(user)
         if commit:
-            session.commit()
-
+            db_session.commit()
         return user
 
-    def get_by_user_name(self, user_name):
+    def get_by_user_name(self, user_name, db_session=None):
+        if not db_session:
+            db_session = self.get_data_source(
+                'pod').get_connection()['session']
         auth_user = None
-        session = self.get_data_source('pod').get_connection()['session']
         try:
-            auth_user = session.query(UserBase).filter(
+            auth_user = db_session.query(UserBase).filter(
                 UserBase.user_name == user_name).one()
         except NoResultFound:
             pass
         return auth_user
+
+    def is_password_valid(self, challenge, encrypted_password):
+        return bcrypt.verify(
+            self.get_peppered_password(challenge), encrypted_password)
+
+    def get_peppered_password(self, password):
+        return '%s%s' % (password, self.security_conf['password']['pepper'])
 
     def generate_key(self, passphrase):
         """ FROM pyraspora: pyaspora.user.models

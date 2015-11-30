@@ -26,7 +26,7 @@ from firenado.core import service
 
 class ProfileService(service.FirenadoService):
 
-    def create(self, profile_data, created_utc=None, session=None):
+    def create(self, profile_data, created_utc=None, db_session=None):
         """
 
         :param person:
@@ -64,11 +64,11 @@ class ProfileService(service.FirenadoService):
         profile.nsfw = False
 
         commit = False
-        if not session:
-            session = self.get_data_source('pod').get_connection()['session']
+        if not db_session:
+            db_session = self.get_data_source('pod').get_connection()['session']
             commit = True
-        session.add(profile)
+        db_session.add(profile)
         if commit:
-            session.commit()
+            db_session.commit()
 
         return profile

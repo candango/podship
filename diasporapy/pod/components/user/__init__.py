@@ -26,6 +26,6 @@ class UserComponent(firenado.core.TornadoComponent):
 
     def get_handlers(self):
         return [
-            (r'/user/accounts', handlers.LoginHandler),
+            (r'/user/account', handlers.LoginHandler),
             (r'/user/register', handlers.LoginHandler),
         ]

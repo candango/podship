@@ -28,23 +28,36 @@ import six
 
 class LoginForm(Form):
 
-    username = StringField(validators=[DataRequired()])
-    password = PasswordField(validators=[DataRequired()])
+    username = StringField(validators=[DataRequired(
+        'The user name is required.')])
+    password = PasswordField(validators=[DataRequired(
+        'Password is required.')])
 
 
 class LoginHandler(firenado.core.TornadoHandler):
 
-    @served_by('diasporapy.pod.components.accounts.services.AccountsService')
+    @served_by('diasporapy.pod.components.account.services.AccountService')
     def get(self):
-        self.render('pod:accounts/login.html',
-                    message=self.accounts_service.get_message('User Login'))
+        self.render('pod:account/login.html',
+                    message=self.account_service.get_message('User Login'))
 
+    @served_by('diasporapy.services.account.AccountService')
     def post(self):
         form = LoginForm(self.request.arguments)
         error_data = {}
         error_data['errors'] = {}
         if form.validate():
-            print(form.data)
+            is_valid_login = self.account_service.is_login_valid(form.data)
+            if is_valid_login:
+                response = {'status': 200}
+                response['userid'] = is_valid_login.id
+                response['next_url'] = self.session.get('next_url')
+                response['password'] = ''
+                self.write(response)
+            else:
+                self.set_status(401)
+                error_data['errors']['form'] = ['Invalid Login']
+                self.write(error_data)
         else:
             self.set_status(401)
             error_data['errors'].update(form.errors)
@@ -54,4 +67,4 @@ class LoginHandler(firenado.core.TornadoHandler):
 class RegisterHandler(firenado.core.TornadoHandler):
 
     def get(self):
-        self.render('pod:accounts/register.html')
+        self.render('pod:account/register.html')
