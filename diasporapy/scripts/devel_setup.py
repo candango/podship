@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2015 Flavio Garcia
+# Copyright 2015-2016 Flavio Garcia
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -24,6 +24,7 @@ import firenado.conf
 import firenado.core
 from firenado.core.service import served_by
 import os
+import importlib
 
 # Setting pod dir
 test_dirname, filename = os.path.split(os.path.abspath(__file__))
@@ -31,7 +32,7 @@ DIASPORAPY_POD_DIR = os.path.join(test_dirname, '..', 'pod')
 os.environ["FIRENADO_CURRENT_APP_CONFIG_PATH"] = os.path.join(
     DIASPORAPY_POD_DIR, 'conf')
 #Reloading firenaod.conf so it loads the pod config files
-reload(firenado.conf)
+importlib.reload(firenado.conf)
 
 application = firenado.core.TornadoApplication()
 

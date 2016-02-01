@@ -34,9 +34,9 @@ class PodComponent(firenado.core.TornadoComponent):
         from firenado.util.sqlalchemy_util import Base
         import diasporapy.models
 
-        print 'Installing Diasporapy Pod...'
+        print('Installing Diasporapy Pod...')
 
-        print 'Creating Pod ...'
+        print('Creating Pod ...')
 
         engine = self.application.get_data_source(
             'pod').get_connection()['engine']
