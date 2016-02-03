@@ -21,7 +21,7 @@ import firenado.core
 from diasporapy.engine import handlers
 
 
-class PodComponent(firenado.core.TornadoComponent):
+class EngineComponent(firenado.core.TornadoComponent):
 
     def get_handlers(self):
         return [
@@ -32,11 +32,11 @@ class PodComponent(firenado.core.TornadoComponent):
     def install(self):
         from firenado.util.sqlalchemy_util import Base
 
-        print 'Installing Diasporapy Pod...'
+        print('Installing Diasporapy Pod...')
 
-        print 'Creating Pod ...'
+        print('Creating Pod ...')
 
-        print self.application.get_data_source('pod').get_connection()
+        print(self.application.get_data_source('pod').get_connection())
 
         engine = self.application.get_data_source('pod').get_connection()['engine']
         engine.echo = True

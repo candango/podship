@@ -6,7 +6,7 @@ app:
         - session
         - pod
   pythonpath: ..
-  port: 8006
+  port: 8007
 
 data:
   sources:
@@ -20,18 +20,18 @@ data:
       # db: 0
 
 components:
-  - id: pod
-    class: diasporapy.pod.PodComponent
+  - id: engine
+    class: diasporapy.engine.EngineComponent
     enabled: true
-  - id: account
-    class: diasporapy.pod.components.account.AccountComponent
-    enabled: true
+  #- id: account
+  #  class: diasporapy.engine.components.account.AccountComponent
+  #  enabled: true
   - id: api
-    class: diasporapy.pod.components.api.ApiComponent
+    class: diasporapy.engine.components.api.ApiComponent
     enabled: true
-  - id: user
-    class: diasporapy.pod.components.user.UserComponent
-    enabled: true
+  #- id: user
+  #  class: diasporapy.engine.components.user.UserComponent
+  #  enabled: true
   #- id: admin
   #  enabled: true
   #- id: info
