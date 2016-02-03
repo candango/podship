@@ -26,5 +26,5 @@ class AccountComponent(firenado.core.TornadoComponent):
     def get_handlers(self):
         return [
             (r'/account/login', handlers.LoginHandler),
-            (r'/account/register', handlers.RegisterHandler),
+            (r'/account/signup', handlers.SignupHandler),
         ]
