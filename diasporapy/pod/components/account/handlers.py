@@ -64,7 +64,7 @@ class LoginHandler(firenado.core.TornadoHandler):
             self.write(error_data)
 
 
-class RegisterHandler(firenado.core.TornadoHandler):
+class SignupHandler(firenado.core.TornadoHandler):
 
     def get(self):
         self.render('pod:account/register.html')
