@@ -1,0 +1,5 @@
+master: default
+instances:
+  - name: default
+    host: localhost
+    port: 8007

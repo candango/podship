@@ -14,6 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from firenado.conf import load_yaml_config_file
 import firenado.core
 
 from diasporapy.pod import handlers
@@ -21,12 +22,23 @@ from diasporapy.pod import handlers
 
 class PodComponent(firenado.core.TornadoComponent):
 
+
     def get_handlers(self):
         return [
             (r'/', handlers.IndexHandler),
             (r'/locales/([A-Za-z0-9-_]+).json?', handlers.LocaleHandler),
             (r'/stream', handlers.StreamHandler),
         ]
+
+    # TODO: This method is just here to trigger the initialize method
+    # Bug was raised on Firenado. Remove it when the bug get fixed.
+    def get_config_filename(self):
+        return 'pod'
+
+    def initialize(self):
+        self.security_conf = load_yaml_config_file(
+            os.path.join(self.project_root, 'conf', 'security.yml'))
+        print('Initializing the pod component')
 
     def install(self):
         from firenado.util.sqlalchemy_util import Base
