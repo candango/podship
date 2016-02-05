@@ -23,5 +23,5 @@ class ApiComponent(firenado.core.TornadoComponent):
 
     def get_handlers(self):
         return [
-            (r'/api/ping', handlers.PingHandler),
+            (r'/api/v1/status/ping', handlers.PingHandler),
         ]

@@ -73,7 +73,8 @@ class PodComponent(firenado.core.TornadoComponent):
         logger.debug('Pinging engine')
         self.ping_engine.stop()
         http_client = httpclient.HTTPClient()
-        engine_url = '%s/api/%s' % (self.get_engine_url('master'), 'ping')
+        engine_url = '%s/api/v1/status/%s' % (
+            self.get_engine_url('master'), 'ping')
         try:
             response = http_client.fetch(httpclient.HTTPRequest(
                     url=engine_url, method='POST', body='ping'))

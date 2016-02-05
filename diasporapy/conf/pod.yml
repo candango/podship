@@ -3,4 +3,3 @@ instances:
     addr: pod.example.com
     host: localhost
     port: 8007
-
