@@ -1,1 +1,6 @@
+instances:
+  - name: Example pod
+    addr: pod.example.com
+    host: localhost
+    port: 8007
 
