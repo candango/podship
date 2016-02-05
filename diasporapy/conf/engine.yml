@@ -1,4 +1,5 @@
 master: default
+#slaves:
 instances:
   - name: default
     host: localhost
