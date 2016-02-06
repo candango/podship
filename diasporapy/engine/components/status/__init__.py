@@ -16,10 +16,10 @@
 
 import firenado.core
 
-from diasporapy.engine.components.api import handlers
+from diasporapy.engine.components.status import handlers
 
 
-class ApiComponent(firenado.core.TornadoComponent):
+class StatusComponent(firenado.core.TornadoComponent):
 
     def get_handlers(self):
         return [

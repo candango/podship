@@ -26,8 +26,8 @@ components:
   #- id: account
   #  class: diasporapy.engine.components.account.AccountComponent
   #  enabled: true
-  - id: api
-    class: diasporapy.engine.components.api.ApiComponent
+  - id: status
+    class: diasporapy.engine.components.status.StatusComponent
     enabled: true
   #- id: user
   #  class: diasporapy.engine.components.user.UserComponent
@@ -36,6 +36,9 @@ components:
   #  enabled: true
   #- id: info
   #  enabled: true
+
+log:
+  level: DEBUG
 
 # Session types could be:
 # file or redis.
