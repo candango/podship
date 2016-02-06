@@ -1,4 +1,4 @@
-{% extends "pod:base.html" %}
+{% extends "engine:base.html" %}
 
 {% block page_title %}
 Sing in into your Administrator account
@@ -10,22 +10,11 @@ Sing in into your Administrator account
 {% block menu %}
 {% end %}
 
-{% block data_main %}stream/stream{% end %}
-
 {% block content %}
-<h1>Stream</h1>
+<h1>Diaspora*py social network</h1>
 
-<ul>
-    <li>
-        Aspects
-    </li>
-    <li>
-        Tags
-    </li>
-</ul>
-
-<div id="stream_post"></div>
-
+<a href="/account/login">Login</a>
+<a href="/account/register">Register</a>
 {% end %}
 
 {% block page_js_files %}
@@ -33,4 +22,3 @@ Sing in into your Administrator account
 
 {% block page_js %}
 {% end %}
-

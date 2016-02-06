@@ -28,13 +28,15 @@ class IndexHandler(firenado.core.TornadoHandler):
 class LocaleHandler(firenado.core.TornadoHandler):
     """ Returns the locale json to be used by the javascript """
     def get(self, lang):
+        import tornado.locale
+        user_locale = tornado.locale.get("pt")
         # TODO: Add to a service
         locale = {
             "app": {
                 "project": "diaspora*py"
             },
             "common": {
-                "password": "Password",
+                "password": user_locale.translate("Password"),
                 "username": "Username",
                 "create": "Create",
                 "add": "Add",
@@ -56,3 +58,4 @@ class StreamHandler(firenado.core.TornadoHandler):
 
     def get(self):
         self.render('stream.html')
+
