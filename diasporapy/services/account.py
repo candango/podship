@@ -35,7 +35,8 @@ class AccountService(service.FirenadoService):
     @service.served_by(PersonService)
     @service.served_by(ProfileService)
     def register(self, account_data):
-        db_session = self.get_data_source('pod').get_connection()['session']
+        db_session = self.get_data_source(
+                'diasporapy').get_connection()['session']
         created_utc = datetime.datetime.utcnow()
         user = self.user_service.create(account_data['user_data'],
                                         created_utc=created_utc,
@@ -53,7 +54,8 @@ class AccountService(service.FirenadoService):
 
     @service.served_by(UserService)
     def is_login_valid(self, login_data):
-        db_session = self.get_data_source('pod').get_connection()['session']
+        db_session = self.get_data_source(
+                'diasporapy').get_connection()['session']
         user = self.user_service.get_by_user_name(
             login_data['username'], db_session)
         if user:

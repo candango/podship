@@ -47,7 +47,8 @@ class PersonService(service.FirenadoService):
         person.fetch_status = 0
         commit = False
         if not db_session:
-            session = self.get_data_source('pod').get_connection()['session']
+            session = self.get_data_source(
+                    'diasporapy').get_connection()['session']
             commit = True
         db_session.add(person)
         if commit:
