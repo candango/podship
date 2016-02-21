@@ -2,7 +2,16 @@
 language: python
 python:
   - "3.4"
+services:
+  - redis-server
+  - postgresql
+addons:
+  postgresql: "9.3"
 install:
-  - "pip install -r requirements.txt"
+  - pip install -r requirements.txt
+before_script:
+  - psql -c "CREATE USER diasporapy WITH CREATEDB PASSWORD 'diasporapypass';" -U postgres
+  - psql -c 'CREATE DATABASE diasporapy OWNER diasporapy;' -U postgres
 script:
-  - "nosetests diasporapy.test.services.account"
+  - nosetests diasporapy.test.services.account
+  - cd diasporapy/diasporapy/engine && firenado app run && cd -
