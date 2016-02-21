@@ -14,19 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import firenado.core
-import logging
-import datetime
+from .. import api_url
 
-logger = logging.getLogger(__name__)
-
-
-class PingHandler(firenado.core.TornadoHandler):
-
-    def post(self):
-        logger.debug(self.request.body)
-        response = {
-            'data': "Pong",
-            'date': datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-        }
-        self.write(response)
+# Building the api v1 url
+api_url_v1 = "%s/v1" % api_url
