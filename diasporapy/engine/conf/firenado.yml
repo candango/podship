@@ -29,9 +29,9 @@ components:
   - id: status
     class: diasporapy.engine.components.status.StatusComponent
     enabled: true
-  #- id: user
-  #  class: diasporapy.engine.components.user.UserComponent
-  #  enabled: true
+  - id: user
+    class: diasporapy.engine.components.user.UserComponent
+    enabled: true
   - id: assets
     enabled: true
   #- id: admin
