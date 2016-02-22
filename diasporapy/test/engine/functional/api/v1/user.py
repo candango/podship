@@ -58,7 +58,7 @@ class UserApiV1FunctionalTestCase(unittest.TestCase):
         self.assertEquals(len(response_body['errors']), 1)
         # Username message
         self.assertEquals(response_body['errors']['schema'][0],
-                          "Invalid body content.")
+                          "Invalid json body content.")
 
     def test_login_invalid_json(self):
         http_client = httpclient.HTTPClient()
@@ -88,21 +88,18 @@ class UserApiV1FunctionalTestCase(unittest.TestCase):
         self.assertEquals(len(response_body['errors']), 1)
         # Username message
         self.assertEquals(response_body['errors']['schema'][0],
-                          "Invalid body content.")
+                          "Invalid json body content.")
 
-    def test_login_without_username_password(self):
+    def test_login_without_username(self):
         http_client = httpclient.HTTPClient()
         login_url = "%s/user/login" % api_url_v1
         response_body = None
         error_code = 0
-
         data = {
             'payload': {
-                'username': "",
                 'password': "",
             }
         }
-
         try:
             response = http_client.fetch(httpclient.HTTPRequest(
                     url=login_url, method='POST', body=json_encode(data)))
@@ -121,8 +118,37 @@ class UserApiV1FunctionalTestCase(unittest.TestCase):
         # Has 2 errors
         self.assertEquals(len(response_body['errors']), 1)
         # Username message
-        self.assertTrue(response_body['errors']['schema'],
-                        "The user name is required.")
-        # Password message
-        self.assertTrue(response_body['errors']['password'],
-                        "Password is required.")
+        self.assertEquals(response_body['errors']['schema'],
+                          "'username' is a required property")
+
+    def test_login_without_password(self):
+        http_client = httpclient.HTTPClient()
+        login_url = "%s/user/login" % api_url_v1
+        response_body = None
+        error_code = 0
+        data = {
+            'payload': {
+                'username': "",
+            }
+        }
+        try:
+            response = http_client.fetch(httpclient.HTTPRequest(
+                    url=login_url, method='POST', body=json_encode(data)))
+        except httpclient.HTTPError as e:
+            # HTTPError is raised for non-200 responses; the response
+            # can be found in e.response.
+            logger.error("Error: %s" % str(e))
+            error_code = e.code
+            response_body = json_decode(e.response.body)
+        except Exception as e:
+            # Other errors are possible, such as IOError.
+            logger.error("Error: %s" % str(e))
+        http_client.close()
+        # Unauthorized http error
+        self.assertEquals(error_code, 400)
+        # Has 2 errors
+        self.assertEquals(len(response_body['errors']), 1)
+        # Username message
+        print(response_body['errors']['schema'])
+        self.assertEquals(response_body['errors']['schema'],
+                          "'password' is a required property")

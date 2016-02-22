@@ -19,7 +19,7 @@ from firenado.core.service import served_by
 import logging
 from jsonschema import validate
 from jsonschema.exceptions import ValidationError
-from tornado.escape import json_decode, json_encode
+from tornado.escape import json_decode
 
 from wtforms.fields import StringField, PasswordField
 from wtforms.validators import DataRequired
@@ -66,14 +66,23 @@ class LoginHandler(firenado.core.TornadoHandler):
     def post(self):
         data = None
         try:
-            data = json_encode(self.request.body)
-        except TypeError as e:
+            data = json_decode(self.request.body)
+            try:
+                validate(data, schema)
+                print('is valid')
+            except ValidationError as e:
+                self.set_status(400)
+                response = {'status': 400}
+                response['errors'] = {
+                    'schema': e.message
+                }
+                self.write(response)
+        except ValueError as e:
             self.set_status(500)
             response = {'status': 500}
             response['errors'] = {
-                'schema': ["Invalid body content."]
+                'schema': ["Invalid json body content."]
             }
-            print(response)
             self.write(response)
 
 
