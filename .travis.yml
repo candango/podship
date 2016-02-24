@@ -14,4 +14,6 @@ before_script:
   - psql -c 'CREATE DATABASE diasporapy OWNER diasporapy;' -U postgres
 script:
   - nosetests diasporapy.test.services.account
-  - cd diasporapy/diasporapy/engine && firenado app run && cd -
+  - cd diasporapy/engine & firenado app run & cd -
+  - nosetests diasporapy.test.engine.functional.api.v1.user
+  - kill -9 `jobs -p`
