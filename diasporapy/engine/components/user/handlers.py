@@ -24,6 +24,9 @@ from tornado.escape import json_decode
 from wtforms.fields import StringField, PasswordField
 from wtforms.validators import DataRequired
 from wtforms_tornado import Form
+import wtforms_json
+
+wtforms_json.init()
 
 # TODO: Use this instead of wtforms
 # https://pypi.python.org/pypi/jsonschema
@@ -69,7 +72,24 @@ class LoginHandler(firenado.core.TornadoHandler):
             data = json_decode(self.request.body)
             try:
                 validate(data, schema)
-                print('is valid')
+                form = LoginForm.from_json(data['payload'])
+                error_data = {}
+                error_data['errors'] = {}
+                if form.validate():
+                    is_valid_login = self.account_service.is_login_valid(form.data)
+                    if is_valid_login:
+                        response = {'status': 200}
+                        response['userid'] = is_valid_login.id
+                        print(response)
+                        self.write(response)
+                    else:
+                        self.set_status(401)
+                        error_data['errors']['form'] = ['Invalid Login']
+                        self.write(error_data)
+                else:
+                    self.set_status(401)
+                    error_data['errors'].update(form.errors)
+                    self.write(error_data)
             except ValidationError as e:
                 self.set_status(400)
                 response = {'status': 400}
@@ -85,28 +105,5 @@ class LoginHandler(firenado.core.TornadoHandler):
             }
             self.write(response)
 
-
-
-
-
-        '''
-        form = LoginForm(self.request.body)
-        error_data = {}
-        error_data['errors'] = {}
-        if form.validate():
-            is_valid_login = self.account_service.is_login_valid(form.data)
-            if is_valid_login:
-                response = {'status': 200}
-                response['userid'] = is_valid_login.id
-                response['next_url'] = self.session.get('next_url')
-                response['password'] = ''
-                self.write(response)
-            else:
-                self.set_status(401)
-                error_data['errors']['form'] = ['Invalid Login']
-                self.write(error_data)
-        else:
-            self.set_status(401)
-            error_data['errors'].update(form.errors)
-            self.write(error_data)
-        '''
+    def get_data_sources(self):
+        return self.get_data_connected().data_sources

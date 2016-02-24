@@ -17,7 +17,6 @@
 from __future__ import (absolute_import, division, print_function,
                         with_statement)
 
-
 import unittest
 from tornado import httpclient
 import logging
@@ -152,3 +151,32 @@ class UserApiV1FunctionalTestCase(unittest.TestCase):
         print(response_body['errors']['schema'])
         self.assertEquals(response_body['errors']['schema'],
                           "'password' is a required property")
+
+    def test_valid_login(self):
+        http_client = httpclient.HTTPClient()
+        login_url = "%s/user/login" % api_url_v1
+        response_body = None
+        code = 0
+        data = {
+            'payload': {
+                'username': "test",
+                'password': "test",
+            }
+        }
+        try:
+            response = http_client.fetch(httpclient.HTTPRequest(
+                    url=login_url, method='POST', body=json_encode(data)))
+            code = response.code
+            response_body = json_decode(response.body)
+        except httpclient.HTTPError as e:
+            # HTTPError is raised for non-200 responses; the response
+            # can be found in e.response.
+            logger.error("Error: %s" % str(e))
+        except Exception as e:
+            # Other errors are possible, such as IOError.
+            logger.error("Error: %s" % str(e))
+        http_client.close()
+        # Unauthorized http error
+        self.assertEquals(code, 200)
+        # Username message
+        self.assertEquals(response_body['userid'], 1)
