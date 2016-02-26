@@ -1,6 +1,6 @@
 steal("jquery", "can", "can/model", "can/view/stache", function($, can) {
     var LoginModel = can.Model.extend({
-        create : "POST /account/login"
+        create : "POST /user/login"
     },{});
 
     can.Component.extend({
