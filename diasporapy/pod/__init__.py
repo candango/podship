@@ -61,7 +61,7 @@ class PodComponent(firenado.core.TornadoComponent):
                 self.engines['master'] = instance
             self.engines[instance['name']] = instance
         self.ping_engine = tornado.ioloop.PeriodicCallback(
-                self.ping_engine_callback, 5000)
+                self.ping_engine_callback, 30000)
         self.ping_engine_callback()
         logger.info('Pod component initialized')
 
