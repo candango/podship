@@ -13,7 +13,15 @@ steal("jquery", "can", "can/model", "can/view/stache", "./post_form", function($
             errorMessage: '',
             userNameError: false,
             passwordError: false,
+            blurTimeout: null,
             stream_post: new StreamPostModel(),
+            blurControls: function() {
+                var viewModel = this;
+                var doBlur = function() {
+                    viewModel.attr("postContainerFocus", false);
+                }
+                this.blurTimeout = window.setTimeout(doBlur, 100);
+            },
             processLogin: function(login) {
                 window.location = login.next_url;
             },
@@ -38,20 +46,21 @@ steal("jquery", "can", "can/model", "can/view/stache", "./post_form", function($
             }
         },
         events: {
-            "#cancelButton click": function() {
-                console.debug($("#postText"));
-                this.viewModel.attr("postContainerFocus", false);
-            },
-            "#postContainer focusin": function() {
+            "#controlsContainer mouseover": function() {
+                clearTimeout(this.viewModel.blurTimeout);
                 this.viewModel.attr("postContainerFocus", true);
             },
-            "#postContainer focusout": function() {
+
+            "#cancelButton click": function() {
+                this.viewModel.blurControls();
+            },
+            "#postForm focusin": function() {
+                clearTimeout(this.viewModel.blurTimeout);
+                this.viewModel.attr("postContainerFocus", true);
+            },
+            "#postForm focusout": function() {
                 console.debug($("#postContainer"));
-                var viewModel = this.viewModel;
-                var doBlur = function() {
-                    viewModel.attr("postContainerFocus", false);
-                }
-                window.setTimeout(doBlur, 100);
+                this.viewModel.blurControls();
             }
         }
     });
