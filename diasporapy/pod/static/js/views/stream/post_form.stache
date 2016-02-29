@@ -2,13 +2,13 @@
     <div id="errorMessagePanel" class="alert alert-danger">{{{errorMessage}}}</div>
 {{/error}}
 
-<div id="postContainer">
+<div id="postContainer" class="panel panel-default">
     <form id="postForm" class="form-horizontal block-form">
         <div id="userNameFormGroup" class="form-group {{#userNameError}}has-error{{/userNameError}}">
-            <textarea name="postText" id="postText" class="form-control" rows="3" data-i18n="[placeholder]common.username;"></textarea>
+            <textarea name="postText" id="postText" class="form-control form-textarea noresize" rows="2" data-i18n="[placeholder]common.username;"></textarea>
         </div>
         {{#postContainerFocus}}
-        <div class="row">
+        <div class="row" id="controlsContainer">
             <div class="col-md-1"><input id="cancelButton" class="btn btn-default" type="button" value="Cancel"></div>
             <div class="col-md-9">.col-md-1</div>
             <div class="col-md-1">
