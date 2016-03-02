@@ -9,10 +9,19 @@ steal("jquery", "can", "can/model", "can/view/stache", "./post_form", function($
         template: can.view("/static/js/views/stream/post_form.stache"),
         viewModel:{
             error: false,
+            postContainerFocus: false,
             errorMessage: '',
             userNameError: false,
             passwordError: false,
+            blurTimeout: null,
             stream_post: new StreamPostModel(),
+            blurControls: function() {
+                var viewModel = this;
+                var doBlur = function() {
+                    viewModel.attr("postContainerFocus", false);
+                }
+                this.blurTimeout = window.setTimeout(doBlur, 100);
+            },
             processLogin: function(login) {
                 window.location = login.next_url;
             },
@@ -37,19 +46,21 @@ steal("jquery", "can", "can/model", "can/view/stache", "./post_form", function($
             }
         },
         events: {
-            "#login_button click": function() {
-                this.viewModel.attr('error', false);
-                this.viewModel.attr('errorMessage', '');
-                this.viewModel.attr('userNameError', false);
-                this.viewModel.attr('passwordError', false);
-                var form = this.element.find( 'form' );
-                var values = can.deparam(form.serialize());
-                var parameters = [];
-                //values._xsrf = getCookie('_xsrf');
-                this.viewModel.login.attr(values).save(
-                    this.viewModel.processLogin.bind(this),
-                    this.viewModel.processLoginError.bind(this)
-                );
+            "#controlsContainer mouseover": function() {
+                clearTimeout(this.viewModel.blurTimeout);
+                this.viewModel.attr("postContainerFocus", true);
+            },
+
+            "#cancelButton click": function() {
+                this.viewModel.blurControls();
+            },
+            "#postForm focusin": function() {
+                clearTimeout(this.viewModel.blurTimeout);
+                this.viewModel.attr("postContainerFocus", true);
+            },
+            "#postForm focusout": function() {
+                console.debug($("#postContainer"));
+                this.viewModel.blurControls();
             }
         }
     });

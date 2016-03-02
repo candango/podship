@@ -4,17 +4,22 @@
         <title>{% block page_title %}{% end %}</title>
         {% block page_head %}{% end %}
 
+        <script type="application/javascript" src="/assets/steal/steal.js"
+                config-path="/static/js/stealconfig.js"
+                data-main="{% block data_main %}{% end %}">
+        </script>
+
+        <script type="application/javascript">
+            steal("stylesheets/base.less!");
+            steal("stylesheets/{% block page_stylesheet %}{% end %}.less!");
+        </script>
+
         <!-- Bootstrap -->
         <link rel="stylesheet" href="/assets/bootstrap/css/bootstrap.min.css">
         <link rel="stylesheet" href="/assets/bootstrap/css/bootstrap-theme.min.css">
         <link rel="stylesheet" href="/static/css/diasporapy_pod.css">
 
         {% block page_css %}{% end %}
-
-        <script type="application/javascript" src="/assets/steal/steal.js"
-                config-path="/static/js/stealconfig.js"
-                data-main="{% block data_main %}{% end %}">
-        </script>
     </head>
     <body>
         <!-- Fixed navbar -->

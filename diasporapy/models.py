@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2015 Flavio Garcia
+# Copyright 2015-2016 Flavio Garcia
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,8 +13,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-#
-# vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4:
 
 from sqlalchemy import Column, ForeignKey
 from sqlalchemy.types import Date, Integer, Text, Boolean, String
@@ -551,6 +549,20 @@ class PodBase(Base):
     ssl = Column('ssl', Boolean(), nullable=True)
     created_at = Column('created_at', TIMESTAMP(), nullable=False)
     updated_at = Column('updated_at', TIMESTAMP(), nullable=False)
+    status = Column('status', Integer(), DefaultClause('0'), nullable=True)
+    checked_at = Column('checked_at', TIMESTAMP(), nullable=False)
+    offline_since = Column('offline_since', TIMESTAMP(), nullable=False)
+    response_time = Column('response_time', Integer(), DefaultClause('-1'),
+                           nullable=True)
+    software = Column('software', String(255), nullable=True)
+    error = Column('error', String(255), nullable=True)
+
+Index('idx_pods_host', PodBase.host, unique=True, postgresql_using='btree')
+Index('idx_pods_checked_at', PodBase.checked_at, postgresql_using='btree')
+Index('idx_pods_offline_since', PodBase.offline_since,
+      postgresql_using='btree')
+Index('idx_pods_response_time', PodBase.response_time,
+      postgresql_using='btree')
 
 
 class PollAnswerBase(Base):

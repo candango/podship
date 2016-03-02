@@ -65,7 +65,8 @@ class ProfileService(service.FirenadoService):
 
         commit = False
         if not db_session:
-            db_session = self.get_data_source('pod').get_connection()['session']
+            db_session = self.get_data_source(
+                    'diasporapy').get_connection()['session']
             commit = True
         db_session.add(profile)
         if commit:

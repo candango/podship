@@ -14,45 +14,43 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from firenado.core.service import FirenadoService
+from __future__ import (absolute_import, division, print_function,
+                        with_statement)
 
+
+import unittest
 from tornado import httpclient
 import logging
-from tornado.escape import json_decode, json_encode
+from tornado.escape import json_decode
+import datetime
+from ..v1 import api_url_v1
 
 logger = logging.getLogger(__name__)
 
 
-class UserService(FirenadoService):
+class StatusApiV1FunctionalTestCase(unittest.TestCase):
+    """ Case that covers the account service.
+    """
 
-    def get_message(self, message):
-        return 'The message is: %s' % message
-
-    def is_login_valid(self, form_data):
-        print(form_data)
+    def test_ping(self):
         http_client = httpclient.HTTPClient()
-        login_url = "http://localhost:8007/api/v1/user/login"
+        ping_url = "%s/status/ping" % api_url_v1
         response_body = None
-        code = 0
-        data = {
-            'payload': form_data
-        }
         try:
             response = http_client.fetch(httpclient.HTTPRequest(
-                    url=login_url, method='POST', body=json_encode(data)))
-            code = response.code
+                    url=ping_url, method='POST', body='ping'))
             response_body = json_decode(response.body)
+            logger.error(response_body)
         except httpclient.HTTPError as e:
             # HTTPError is raised for non-200 responses; the response
             # can be found in e.response.
-            logger.debug("Error: %s" % str(e))
-            code = e.response.code
-            response_body = json_decode(e.response.body)
+            logger.error("Error: %s" % str(e))
         except Exception as e:
             # Other errors are possible, such as IOError.
             logger.error("Error: %s" % str(e))
         http_client.close()
-        return {
-            'status': code,
-            'response': response_body
-        }
+        # Has pong
+        self.assertEquals(response_body['data'], 'Pong')
+        # Has a valid date
+        self.assertTrue(datetime.datetime.strptime(
+                response_body['date'], '%Y-%m-%d %H:%M:%S'))

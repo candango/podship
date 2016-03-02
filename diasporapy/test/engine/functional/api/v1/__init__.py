@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2015 Flavio Garcia
+# Copyright 2015-2016 Flavio Garcia
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,22 +13,8 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-#
-# vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4:
 
-from firenado.core.service import FirenadoService
+from .. import api_url
 
-
-class AccountService(FirenadoService):
-
-    def get_message(self, message):
-        return 'The message is: %s' % message
-
-    def login(self):
-        pass
-
-    def get_all(self):
-        return []
-
-    def by_id(self, id):
-        return None
+# Building the api v1 url
+api_url_v1 = "%s/v1" % api_url

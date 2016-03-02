@@ -95,7 +95,7 @@ class UserService(service.FirenadoService):
         commit = False
         if not db_session:
             db_session = self.get_data_source(
-                'pod').get_connection()['session']
+                'diasporapy').get_connection()['session']
             commit = True
         db_session.add(user)
         if commit:
@@ -105,7 +105,7 @@ class UserService(service.FirenadoService):
     def get_by_user_name(self, user_name, db_session=None):
         if not db_session:
             db_session = self.get_data_source(
-                'pod').get_connection()['session']
+                'diasporapy').get_connection()['session']
         auth_user = None
         try:
             auth_user = db_session.query(UserBase).filter(

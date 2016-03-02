@@ -16,6 +16,7 @@
 
 import firenado.core
 import logging
+import datetime
 
 logger = logging.getLogger(__name__)
 
@@ -24,4 +25,8 @@ class PingHandler(firenado.core.TornadoHandler):
 
     def post(self):
         logger.debug(self.request.body)
-        self.write("Pong")
+        response = {
+            'data': "Pong",
+            'date': datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+        }
+        self.write(response)

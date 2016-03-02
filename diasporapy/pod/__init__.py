@@ -61,7 +61,7 @@ class PodComponent(firenado.core.TornadoComponent):
                 self.engines['master'] = instance
             self.engines[instance['name']] = instance
         self.ping_engine = tornado.ioloop.PeriodicCallback(
-                self.ping_engine_callback, 5000)
+                self.ping_engine_callback, 30000)
         self.ping_engine_callback()
         logger.info('Pod component initialized')
 
@@ -70,14 +70,19 @@ class PodComponent(firenado.core.TornadoComponent):
         return 'http://%s:%s' % (engine['host'], engine['port'])
 
     def ping_engine_callback(self):
+        from tornado import escape
         logger.debug('Pinging engine')
         self.ping_engine.stop()
         http_client = httpclient.HTTPClient()
         engine_url = '%s/api/v1/status/%s' % (
             self.get_engine_url('master'), 'ping')
+
+        # TODO: get data from the config file
+        data = escape.json_encode({'host': 'pod.candango.org', 'port': '8006'})
+
         try:
             response = http_client.fetch(httpclient.HTTPRequest(
-                    url=engine_url, method='POST', body='ping'))
+                    url=engine_url, method='POST', body=data))
             print(response.body)
             self.master_engine_available = True
             logger.debug("Master engine is available")

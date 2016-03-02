@@ -4,7 +4,7 @@ app:
     sources:
         # Set here references from sources defined on data.sources
         - session
-        - pod
+        - diasporapy
   pythonpath: ..
   port: 8006
 
@@ -12,7 +12,7 @@ data:
   sources:
     - name: session
       connector: redis
-    - name: pod
+    - name: diasporapy
       connector: sqlalchemy
       url: postgresql+psycopg2://diasporapy:diasporapypass@localhost:5432/diasporapy
       # host: localhost
@@ -22,9 +22,6 @@ data:
 components:
   - id: pod
     class: diasporapy.pod.PodComponent
-    enabled: true
-  - id: account
-    class: diasporapy.pod.components.account.AccountComponent
     enabled: true
   - id: user
     class: diasporapy.pod.components.user.UserComponent
