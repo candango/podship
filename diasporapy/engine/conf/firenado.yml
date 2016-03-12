@@ -21,7 +21,7 @@ data:
 
 components:
   - id: engine
-    class: diasporapy.engine.EngineComponent
+    class: diasporapy.engine.application.EngineComponent
     enabled: true
   #- id: account
   #  class: diasporapy.engine.components.account.AccountComponent
