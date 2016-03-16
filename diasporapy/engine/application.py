@@ -35,6 +35,8 @@ class RabbitMQClient(object):
         self.connecting = False
         self.connection = None
         self.channel = None
+        self.in_channel = None
+        self.out_channels = {}
 
     def connect(self):
         if self.connecting:
@@ -43,16 +45,21 @@ class RabbitMQClient(object):
         pika.log.info("Connecting to RabbitMQ")
         self.connecting = True
 
+EXCHANGE_NAME = 'gateway_in'
+
+INPUT_QUEUE_NAME = 'gateway_in_queue'
 
 class EngineComponent(firenado.core.TornadoComponent):
 
     def __init__(self, name, application):
         super(EngineComponent, self).__init__(name, application)
         self.rabbitmq = {}
+        self.rabbitmq['channels'] = {}
+        self.rabbitmq['channels']['in'] = None
+        self.rabbitmq['channels']['out'] = {}
+        self.rabbitmq['conf'] = None
         self.rabbitmq['connecting'] = False
         self.rabbitmq['connection'] = None
-        self.rabbitmq['channel'] = None
-        self.rabbitmq['conf'] = None
         self.project_root = os.path.abspath(
                 os.path.join(os.path.dirname(__file__), '..'))
 
@@ -100,7 +107,25 @@ class EngineComponent(firenado.core.TornadoComponent):
     def rabbitmq_connection_opened(self, connection):
         logger.info('Engine connected to RabbitMQ')
         self.rabbitmq['connection'] = connection
+        self.rabbitmq['connection'].channel(self.rabbitmq_channel_opened)
+
+    def rabbitmq_channel_opened(self, channel):
+        logger.info('Engine channel opened with RabbitMQ')
+        self.rabbitmq['channels']['in'] = channel
+        self.rabbitmq['channels']['in'].exchange_declare(
+            exchange=EXCHANGE_NAME,
+            type='topic')
+        self.rabbitmq['channels']['in'].queue_declare(
+            callback=self.rabbitmq_input_queue_declared,
+            queue=INPUT_QUEUE_NAME)
         logger.info('Engine component initialized')
+
+    def rabbitmq_input_queue_declared(self, queue):
+        logger.info('Engine input queue declared on RabbitMQ')
+        self.rabbitmq['channels']['in'].queue_bind(callback=None,
+                                                   exchange=EXCHANGE_NAME,
+                                                   queue=INPUT_QUEUE_NAME,
+                                                   routing_key="#")
 
     def rabbitmq_connection_closed(self, connection, code, message):
         logger.info('Engine disconnected from RabbitMQ')
