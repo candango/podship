@@ -27,6 +27,9 @@ from pika.adapters.tornado_connection import TornadoConnection
 
 logger = logging.getLogger(__name__)
 
+EXCHANGE_NAME = 'gateway_in'
+INPUT_QUEUE_NAME = 'gateway_in_queue'
+
 
 # Based on https://gist.github.com/brimcfadden/2855520
 class RabbitMQClient(object):
@@ -97,10 +100,6 @@ class RabbitMQClient(object):
                      'terminating the node. Cause: %s' % error_message)
         import tornado.ioloop
         tornado.ioloop.IOLoop.instance().stop()
-
-EXCHANGE_NAME = 'gateway_in'
-
-INPUT_QUEUE_NAME = 'gateway_in_queue'
 
 
 class EngineComponent(firenado.core.TornadoComponent):
