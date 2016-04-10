@@ -34,7 +34,7 @@ components:
   #  enabled: true
 
 log:
-  level: WARNING
+  level: DEBUG
 
 # Session types could be:
 # file or redis.

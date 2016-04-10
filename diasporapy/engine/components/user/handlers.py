@@ -14,8 +14,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import firenado.core
-from firenado.core.service import served_by
+import firenado.tornadoweb
+from firenado.service import served_by
 import logging
 from jsonschema import validate
 from jsonschema.exceptions import ValidationError
@@ -63,7 +63,7 @@ class LoginForm(Form):
 logger = logging.getLogger(__name__)
 
 
-class LoginHandler(firenado.core.TornadoHandler):
+class LoginHandler(firenado.tornadoweb.TornadoHandler):
 
     @served_by('diasporapy.services.account.AccountService')
     def post(self):

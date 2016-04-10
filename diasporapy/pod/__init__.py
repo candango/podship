@@ -14,8 +14,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from firenado.conf import load_yaml_config_file
-import firenado.core
+from firenado.config import load_yaml_config_file
+import firenado.tornadoweb
 from diasporapy.pod import handlers
 import os
 from tornado import httpclient
@@ -26,7 +26,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-class PodComponent(firenado.core.TornadoComponent):
+class PodComponent(firenado.tornadoweb.TornadoComponent):
 
     def __init__(self, name, application):
         super(PodComponent, self).__init__(name, application)

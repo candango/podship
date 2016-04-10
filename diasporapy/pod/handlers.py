@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2015 Flavio Garcia
+# Copyright 2015-2016 Flavio Garcia
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,19 +13,17 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-#
-# vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4:
 
-import firenado.core
+import firenado.tornadoweb
 
 
-class IndexHandler(firenado.core.TornadoHandler):
+class IndexHandler(firenado.tornadoweb.TornadoHandler):
 
     def get(self):
         self.render('index.html')
 
 
-class LocaleHandler(firenado.core.TornadoHandler):
+class LocaleHandler(firenado.tornadoweb.TornadoHandler):
     """ Returns the locale json to be used by the javascript """
     def get(self, lang):
         import tornado.locale
@@ -54,7 +52,7 @@ class LocaleHandler(firenado.core.TornadoHandler):
         }
         self.write(locale)
 
-class StreamHandler(firenado.core.TornadoHandler):
+class StreamHandler(firenado.tornadoweb.TornadoHandler):
 
     def get(self):
         self.render('stream.html')

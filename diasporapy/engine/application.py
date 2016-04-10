@@ -14,8 +14,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from firenado.conf import load_yaml_config_file
-import firenado.core
+from firenado.config import load_yaml_config_file
+import firenado.tornadoweb
 
 from . import handlers
 import pika
@@ -102,7 +102,7 @@ class RabbitMQClient(object):
         tornado.ioloop.IOLoop.instance().stop()
 
 
-class EngineComponent(firenado.core.TornadoComponent):
+class EngineComponent(firenado.tornadoweb.TornadoComponent):
 
     def __init__(self, name, application):
         super(EngineComponent, self).__init__(name, application)
@@ -123,13 +123,10 @@ class EngineComponent(firenado.core.TornadoComponent):
         return 'engine'
 
     def initialize(self):
-        self.rabbitmq['client'] = RabbitMQClient(
-            load_yaml_config_file(os.path.join(
-                self.project_root, 'conf', 'rabbitmq.yml')))
-        self.rabbitmq['client'].connect()
+        pass
 
     def shutdown(self):
-        self.rabbitmq['client'].disconnect()
+        pass
 
 
 if __name__ == '__main__':

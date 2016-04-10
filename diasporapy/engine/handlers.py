@@ -14,16 +14,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import firenado.core
+import firenado.tornadoweb
 
 
-class IndexHandler(firenado.core.TornadoHandler):
+class IndexHandler(firenado.tornadoweb.TornadoHandler):
 
     def get(self):
         self.render('index.html')
 
 
-class StreamHandler(firenado.core.TornadoHandler):
+class StreamHandler(firenado.tornadoweb.TornadoHandler):
 
     def get(self):
         self.render('stream.html')

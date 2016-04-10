@@ -6,7 +6,7 @@ app:
         - session
         - diasporapy
   pythonpath: ..
-  port: 8007
+  port: 8008
 
 data:
   sources:

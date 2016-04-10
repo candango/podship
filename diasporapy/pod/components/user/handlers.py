@@ -14,8 +14,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import firenado.core
-from firenado.core.service import served_by
+import firenado.tornadoweb
+from firenado.service import served_by
 
 from wtforms.fields import StringField, PasswordField
 from wtforms.validators import DataRequired
@@ -32,7 +32,7 @@ class LoginForm(Form):
         'Password is required.')])
 
 
-class LoginHandler(firenado.core.TornadoHandler):
+class LoginHandler(firenado.tornadoweb.TornadoHandler):
 
     @served_by('diasporapy.pod.components.user.services.UserService')
     def get(self):
@@ -64,7 +64,7 @@ class LoginHandler(firenado.core.TornadoHandler):
             self.write(error_data)
 
 
-class SignupHandler(firenado.core.TornadoHandler):
+class SignupHandler(firenado.tornadoweb.TornadoHandler):
 
     def get(self):
         self.render('pod:account/register.html')

@@ -14,7 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import firenado.core
+import firenado.tornadoweb
 import logging
 import datetime
 import uuid
@@ -26,7 +26,7 @@ from tornado.locks import Condition
 logger = logging.getLogger(__name__)
 
 
-class PingHandler(firenado.core.TornadoHandler):
+class PingHandler(firenado.tornadoweb.TornadoHandler):
 
     def __init__(self, application, request, **kwargs):
         super(PingHandler, self).__init__(application, request, **kwargs)

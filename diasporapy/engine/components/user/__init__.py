@@ -14,12 +14,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import firenado.core
+import firenado.tornadoweb
 
 from diasporapy.engine.components.user import handlers
 
 
-class UserComponent(firenado.core.TornadoComponent):
+class UserComponent(firenado.tornadoweb.TornadoComponent):
 
     def get_handlers(self):
         return [
