@@ -42,6 +42,10 @@ class PingHandler(firenado.core.TornadoHandler):
         self.in_channel.queue_declare(exclusive=True,
                                       callback=self.on_request_queue_declared)
         yield self.condition.wait()
+<<<<<<< HEAD
+=======
+
+>>>>>>> 7a769556bf68810c88840a350d4efda92a7e2794
         self.write(self.response)
 
     def on_request_queue_declared(self, response):
@@ -65,4 +69,8 @@ class PingHandler(firenado.core.TornadoHandler):
                 'date': datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
             }
             self.in_channel.queue_delete(queue=self.callback_queue)
+<<<<<<< HEAD
             self.condition.notify()
+=======
+            self.condition.notify()
+>>>>>>> 7a769556bf68810c88840a350d4efda92a7e2794
