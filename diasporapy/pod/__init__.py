@@ -44,11 +44,6 @@ class PodComponent(firenado.tornadoweb.TornadoComponent):
             (r'/stream', handlers.StreamHandler),
         ]
 
-    # TODO: This method is just here to trigger the initialize method
-    # Bug was raised on Firenado. Remove it when the bug get fixed.
-    def get_config_filename(self):
-        return 'pod'
-
     def initialize(self):
         logger.info('Initializing pod component')
         self.security_conf = load_yaml_config_file(
