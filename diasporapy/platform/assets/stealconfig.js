@@ -9,5 +9,8 @@ System.config({
         jquery: "/vendor/jquery/dist/jquery.js",
         "jquery/*": "/vendor/jquery/dist/*.js",
         "stylesheets/*.less": "/assets/stylesheets/*.less"
+    },
+    ext: {
+        stache: 'can/view/stache/system'
     }
 });
