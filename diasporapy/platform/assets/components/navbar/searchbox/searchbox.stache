@@ -1,24 +1,30 @@
 <div id="searchComponent">
 <form class="navbar-form navbar-right" role="search">
-    <div class="form-group">
-        <input type="text" class="form-control" placeholder="Search">
-    </div>
-    <div class="btn-group" role="group">
-        <button  type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></button>
+    <div id="searchDropdown" class="btn-group" role="group">
+        <input type="text" id="searchQuery" data-toggle="dropdown" class="form-control dropdown-toggle" placeholder="Search">
         <div class="dropdown-menu dropdown-menu-right dropdown-search" role="menu">
             <div class="list-group">
-                <a href="#" class="list-group-item active">
-                    <h4 class="list-group-item-heading">List group item heading</h4>
-                    <p class="list-group-item-text">safasdf</p>
-                </a>
-                <a href="#" class="list-group-item">
-                    <h4 class="list-group-item-heading">List group item heading</h4>
-                    <p class="list-group-item-text">...</p>
-                </a>
-                <a href="#" class="list-group-item">
-                    <h4 class="list-group-item-heading">List group item heading</h4>
-                    <p class="list-group-item-text">...</p>
-                </a>
+                {{#hasContacts}}
+                    {{#each contacts}}
+                        <a href="#" class="list-group-item">
+                            <div class="row">
+                                <div class="col-md-4">img</div>
+                                <div class="col-md-8">{{name}}</div>
+                            </div>
+                        </a>
+                    {{/each}}
+                {{/hasContacts}}
+                {{#noContacts}}
+                    <a href="#" class="list-group-item">
+                        <h4 class="list-group-item-heading">List group item heading</h4>
+                        <p class="list-group-item-text">...</p>
+                    </a>
+                {{/noContacts}}
+                {{#isLoading}}
+                    <a href="#" class="list-group-item">
+                        <p class="list-group-item-text">Loading...</p>
+                    </a>
+                {{/isLoading}}
             </div>
         </div>
     </div>
