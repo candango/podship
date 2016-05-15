@@ -6,8 +6,8 @@ steal("jquery", "can", "components/navbar/searchbox/searchbox.stache",
     can.Component.extend({
         tag: "nav-search-box",
         template: template,
-        search: SearchboxModel(),
         viewModel:{
+            search: SearchboxModel(),
             error: false,
             noContacts: false,
             hasContacts: false,
@@ -15,16 +15,18 @@ steal("jquery", "can", "components/navbar/searchbox/searchbox.stache",
         },
         events: {
             "#searchComponent focus": function() {
-                if($("#searchQuery").val().length>2){
+                console.debug(this);
+                if($("#searchQuery").val().length > 2){
                     $("#searchDropdown").addClass("open");
                 }
-                console.debug("Focused on the search Component!");
+                steal.dev.log("Focused on the search Component!");
             },
             "#searchComponent blur": function() {
-                console.debug("Out of the search Component!");
+                steal.dev.log("Out of the search Component!");
             },
-            "#searchComponent click.bs.dropdown": function(searchComponent, event) {
-                if($("#searchQuery").val().length<3) {
+            "#searchComponent click.bs.dropdown": function(searchComponent,
+                                                           event) {
+                if($("#searchQuery").val().length < 3) {
                     $("#searchDropdown").removeClass("open");
                     event.stopPropagation();
                 }
@@ -34,15 +36,21 @@ steal("jquery", "can", "components/navbar/searchbox/searchbox.stache",
                 }
             },
             "#searchQuery keyup": function(searchQuery, event) {
-                if(searchQuery.val().length>2) {
+                if(searchQuery.val().length > 2) {
                     $("#searchDropdown").addClass("open");
+                    this.viewModel.isLoading = true;
+                    steal.dev.log("The search query size is bigger than 2. " +
+                        "Showing the dropdwon.");
                 }
                 else{
                     $("#searchDropdown").removeClass("open");
+                    steal.dev.log("The search query size is smaller than 3. " +
+                        "Not showing the dropdwon.");
                 }
             }
         }
     });
     $("#navbarSearchbox").html(
-        can.stache("<nav-search-box></nav-search-box>")());
+        can.stache("<nav-search-box></nav-search-box>")()
+    );
 });

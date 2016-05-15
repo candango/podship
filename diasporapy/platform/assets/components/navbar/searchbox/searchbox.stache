@@ -21,9 +21,9 @@
                     </a>
                 {{/noContacts}}
                 {{#isLoading}}
-                    <a href="#" class="list-group-item">
+                    <div href="#" class="list-group-item text-center">
                         <p class="list-group-item-text">Loading...</p>
-                    </a>
+                    </div>
                 {{/isLoading}}
             </div>
         </div>
