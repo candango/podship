@@ -1,17 +1,37 @@
-steal("jquery", "can", "components/navbar/searchbox/searchbox.stache",
-    function($, can, template) {
+steal("jquery", "can", "can/util/fixture",
+    "components/navbar/searchbox/searchbox.stache",
+    function($, can, fixture, template) {
+
+    can.fixture({
+        "POST /contact/search": "/assets/fixtures/search/results.json",
+        "DELETE /tasks/{id}": function() {
+            return {};
+        }
+    });
+
     var SearchboxModel = can.Model.extend({
         findAll : "POST /contact/search"
     },{});
+
     can.Component.extend({
         tag: "nav-search-box",
         template: template,
         viewModel:{
-            search: SearchboxModel(),
             error: false,
+            retults: [],
             noContacts: false,
-            hasContacts: false,
-            isLoading: true
+            hasResults: false,
+            isLoading: true,
+            search: function() {
+                SearchboxModel.findAll(
+                    {}, function( response ){
+                        this.attr('hasResults', true);
+                        this.attr('results', response[0].results);
+                        console.debug(this);
+                        this.attr('isLoading', false);
+                    }.bind(this)
+                );
+            }
         },
         events: {
             "#searchComponent focus": function() {
@@ -28,6 +48,7 @@ steal("jquery", "can", "components/navbar/searchbox/searchbox.stache",
                                                            event) {
                 if($("#searchQuery").val().length < 3) {
                     $("#searchDropdown").removeClass("open");
+
                     event.stopPropagation();
                 }
                 else{
@@ -39,6 +60,7 @@ steal("jquery", "can", "components/navbar/searchbox/searchbox.stache",
                 if(searchQuery.val().length > 2) {
                     $("#searchDropdown").addClass("open");
                     this.viewModel.isLoading = true;
+                    this.viewModel.search();
                     steal.dev.log("The search query size is bigger than 2. " +
                         "Showing the dropdwon.");
                 }
