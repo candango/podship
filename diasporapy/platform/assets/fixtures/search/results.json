@@ -1,5 +1,6 @@
 [{
   "results": [
-    {"img": "image1", "label": "label 1"}
+    {"img": "https://placeholdit.imgix.net/~text?txtsize=5&txt=30%C3%9730&w=40&h=40", "label": "label 1"},
+    {"img": "https://placeholdit.imgix.net/~text?txtsize=5&txt=30%C3%9730&w=40&h=40", "label": "label 2"}
   ]
 }]

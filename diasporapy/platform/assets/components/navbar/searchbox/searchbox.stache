@@ -2,15 +2,12 @@
 <form class="navbar-form navbar-right" role="search">
     <div id="searchDropdown" class="btn-group" role="group">
         <input type="text" id="searchQuery" data-toggle="dropdown" class="form-control dropdown-toggle" placeholder="Search">
-        <div class="dropdown-menu dropdown-menu-right dropdown-search" role="menu">
+        <div class="dropdown-menu dropdown-menu-left dropdown-search" role="menu">
             <div class="list-group">
                 {{#hasResults}}
                     {{#each results}}
                         <a href="#" class="list-group-item">
-                            <div class="row">
-                                <div class="col-md-4">img</div>
-                                <div class="col-md-8">{{{label}}}</div>
-                            </div>
+                            <img src="{{{img}}}"> {{{label}}}
                         </a>
                     {{/each}}
                 {{/hasResults}}

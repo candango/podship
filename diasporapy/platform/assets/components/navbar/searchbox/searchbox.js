@@ -1,6 +1,22 @@
-steal("jquery", "can", "can/util/fixture",
+/**
+ * Copyright 2015-2016 Flavio Garcia
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+steal("jquery", "can", "can/util/fixture", "can/event",
     "components/navbar/searchbox/searchbox.stache",
-    function($, can, fixture, template) {
+    function($, can, can_fixture, can_event, template) {
 
     can.fixture({
         "POST /contact/search": "/assets/fixtures/search/results.json",
@@ -27,17 +43,15 @@ steal("jquery", "can", "can/util/fixture",
                     {}, function( response ){
                         this.attr('hasResults', true);
                         this.attr('results', response[0].results);
-                        console.debug(this);
                         this.attr('isLoading', false);
                     }.bind(this)
                 );
             }
         },
         events: {
-            "#searchComponent focus": function() {
-                console.debug(this);
-                if($("#searchQuery").val().length > 2){
-                    $("#searchDropdown").addClass("open");
+            "#searchComponent focus": function(searchComponent, event) {
+                if($("#searchQuery").val().length > 2) {
+                    can.event.trigger($("#searchQuery"), "keyup");
                 }
                 steal.dev.log("Focused on the search Component!");
             },
@@ -46,15 +60,21 @@ steal("jquery", "can", "can/util/fixture",
             },
             "#searchComponent click.bs.dropdown": function(searchComponent,
                                                            event) {
-                if($("#searchQuery").val().length < 3) {
-                    $("#searchDropdown").removeClass("open");
-
-                    event.stopPropagation();
+                if($("#searchQuery").val().length > 2) {
+                    if($("#searchDropdown").hasClass("open")){
+                        $("#searchDropdown").toggleClass("open");
+                        steal.dev.log("The search query size is bigger than 2. " +
+                            "Showing the dropdwon.");
+                    }
                 }
-                else{
-                    event.stopPropagation();
-                    $("#searchDropdown").addClass("open");
+                else {
+                    if(!$("#searchDropdown").hasClass("open")){
+                        $("#searchDropdown").toggleClass("open");
+                        steal.dev.log("The search query size is smaller than 3. " +
+                            "Not showing the dropdwon.");
+                    }
                 }
+                console.debug($("#searchDropdown").hasClass("open"));
             },
             "#searchQuery keyup": function(searchQuery, event) {
                 if(searchQuery.val().length > 2) {
