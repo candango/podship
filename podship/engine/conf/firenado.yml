@@ -21,16 +21,16 @@ data:
 
 components:
   - id: engine
-    class: diasporapy.engine.application.EngineComponent
+    class: podship.engine.application.EngineComponent
     enabled: true
   #- id: account
   #  class: diasporapy.engine.components.account.AccountComponent
   #  enabled: true
   - id: status
-    class: diasporapy.engine.components.status.StatusComponent
+    class: podship.engine.components.status.StatusComponent
     enabled: true
   - id: user
-    class: diasporapy.engine.components.user.UserComponent
+    class: podship.engine.components.user.UserComponent
     enabled: true
   - id: assets
     enabled: true

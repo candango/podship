@@ -21,16 +21,16 @@ data:
 
 components:
   - id: gateway
-    class: diasporapy.gateway.application.GatewayComponent
+    class: podship.gateway.application.GatewayComponent
     enabled: true
   #- id: account
   #  class: diasporapy.engine.components.account.AccountComponent
   #  enabled: true
   - id: status
-    class: diasporapy.gateway.components.status.StatusComponent
+    class: podship.gateway.components.status.StatusComponent
     enabled: true
   - id: user
-    class: diasporapy.gateway.components.user.UserComponent
+    class: podship.gateway.components.user.UserComponent
     enabled: true
   - id: assets
     enabled: true

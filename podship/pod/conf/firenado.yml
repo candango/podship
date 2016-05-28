@@ -21,10 +21,10 @@ data:
 
 components:
   - id: pod
-    class: diasporapy.pod.PodComponent
+    class: podship.pod.PodComponent
     enabled: true
   - id: user
-    class: diasporapy.pod.components.user.UserComponent
+    class: podship.pod.components.user.UserComponent
     enabled: true
   - id: assets
     enabled: true
