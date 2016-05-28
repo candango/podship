@@ -21,3 +21,8 @@ class IndexHandler(firenado.tornadoweb.TornadoHandler):
 
     def get(self):
         self.render('index.html')
+
+class LoginHandler(firenado.tornadoweb.TornadoHandler):
+
+    def get(self):
+        self.render('login.html')
