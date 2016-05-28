@@ -1,0 +1,26 @@
+{{#error}}
+    <div id="errorMessagePanel" class="alert alert-danger">{{{errorMessage}}}</div>
+{{/error}}
+
+<div class="text-center">
+    <h1 class="form-login-heading" data-i18n="app.project"></h1>
+</div>
+
+
+<form id="form_login" class="form-horizontal block-form">
+    <div id="userNameFormGroup" class="form-group {{#userNameError}}has-error{{/userNameError}}">
+        <label for="username">User Name</label>
+        <div class="input-group">
+            <span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>
+            <input type="text" name="username" id="username" class="form-control" data-i18n="[placeholder]common.username;" autofocus />
+        </div>
+    </div>
+    <div id="passwordFormGroup" class="form-group {{#passwordError}}has-error{{/passwordError}}">
+        <label for="password">Password</label>
+        <div class="input-group">
+            <span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
+            <input type="password" name="password" id="password" class="form-control" data-i18n="[placeholder]common.password;" />
+        </div>
+    </div>
+    <a id="login_button" href="javascript:;" class="btn btn-lg btn-primary btn-block authentication"><span class="glyphicon glyphicon-log-in"></span>  <span data-i18n="common.login"></span></a>
+</form>

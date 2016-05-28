@@ -1,0 +1,5 @@
+# See: http://pika.readthedocs.org/en/latest/modules/parameters.html
+host: localhost
+port: 5672
+user: guest
+pass: guest

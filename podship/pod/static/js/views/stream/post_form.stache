@@ -1,0 +1,34 @@
+{{#error}}
+    <div id="errorMessagePanel" class="alert alert-danger">{{{errorMessage}}}</div>
+{{/error}}
+
+<div id="postContainer" class="panel panel-default">
+    <form id="postForm" class="form-horizontal block-form">
+        <div id="userNameFormGroup" class="form-group {{#userNameError}}has-error{{/userNameError}}">
+            <textarea name="postText" id="postText" class="form-control form-textarea noresize" rows="2" data-i18n="[placeholder]common.username;"></textarea>
+        </div>
+        {{#postContainerFocus}}
+        <div class="row" id="controlsContainer">
+            <div class="col-md-1"><input id="cancelButton" class="btn btn-default" type="button" value="Cancel"></div>
+            <div class="col-md-9">.col-md-1</div>
+            <div class="col-md-1">
+                <!-- Single button -->
+                <div class="btn-group">
+                  <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Action <span class="caret"></span>
+                  </button>
+                  <ul class="dropdown-menu">
+                    <li><a href="#">Public</a></li>
+                    <li><a href="#">All Aspects</a></li>
+                    <li role="separator" class="divider"></li>
+                    <li><a href="#">A Aspect</a></li>
+                  </ul>
+                </div>
+            </div>
+            <div class="col-md-1">
+                <input id="postButton" class="btn btn-primary" type="button" value="Share">
+            </div>
+        </div>
+        {{/postContainerFocus}}
+    </form>
+</div>
