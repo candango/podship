@@ -6,7 +6,7 @@
 
         <script src="/vendor/steal/steal.js"
                 config="/assets/stealconfig.js"
-                main="@empty">
+                main="{% block data_main %}{% end %}">
         </script>
 
         <script type="application/javascript">
@@ -68,13 +68,16 @@
 
             <hr>
 
-            <footer>powered by diaspora*py</footer>
+            <footer>powered by Firenado</footer>
         </div>
         <!-- Placed at the end of the document so the pages load faster -->
         <script type="application/javascript">
             steal("jquery", function($){steal("./bootstrap")});
             steal("./i18next", function(i18n){return i18n});
-            steal("components/navbar/searchbox");
+            steal("components/navbar/searchbox").then(function(){
+                var searchBoxTemplate = "<nav-search-box></nav-search-box>";
+                $("#navbarSearchbox").html(can.stache(searchBoxTemplate)());
+            });
         </script>
         {% block page_js_files %}{% end %}
 

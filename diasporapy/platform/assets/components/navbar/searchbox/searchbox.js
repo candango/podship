@@ -17,11 +17,9 @@
 steal("jquery", "can", "can/util/fixture", "can/event",
     "components/navbar/searchbox/searchbox.stache",
     function($, can, can_fixture, can_event, template) {
-
     can.fixture({
-        "POST /contact/search": "/assets/fixtures/search/results.json",
-        "DELETE /tasks/{id}": function() {
-            return {};
+        "POST /contact/search": function() {
+            return "/assets/fixtures/search/results.json";
         }
     });
 
@@ -49,6 +47,7 @@ steal("jquery", "can", "can/util/fixture", "can/event",
             }
         },
         events: {
+
             "#searchComponent focus": function(searchComponent, event) {
                 if($("#searchQuery").val().length > 2) {
                     can.event.trigger($("#searchQuery"), "keyup");
@@ -63,26 +62,25 @@ steal("jquery", "can", "can/util/fixture", "can/event",
                 if($("#searchQuery").val().length > 2) {
                     if($("#searchDropdown").hasClass("open")){
                         $("#searchDropdown").toggleClass("open");
-                        steal.dev.log("The search query size is bigger than 2. " +
-                            "Showing the dropdwon.");
+                        steal.dev.log("The search query size is bigger than " +
+                            "2. Showing the dropdwon.");
                     }
                 }
                 else {
                     if(!$("#searchDropdown").hasClass("open")){
                         $("#searchDropdown").toggleClass("open");
-                        steal.dev.log("The search query size is smaller than 3. " +
-                            "Not showing the dropdwon.");
+                        steal.dev.log("The search query size is smaller " +
+                            "than 3. Not showing the dropdwon.");
                     }
                 }
-                console.debug($("#searchDropdown").hasClass("open"));
             },
             "#searchQuery keyup": function(searchQuery, event) {
                 if(searchQuery.val().length > 2) {
                     $("#searchDropdown").addClass("open");
                     this.viewModel.isLoading = true;
                     this.viewModel.search();
-                    steal.dev.log("The search query size is bigger than 2. " +
-                        "Showing the dropdwon.");
+                    steal.dev.log("The search query size is bigger than " +
+                        "2. Showing the dropdwon.");
                 }
                 else{
                     $("#searchDropdown").removeClass("open");
@@ -92,7 +90,4 @@ steal("jquery", "can", "can/util/fixture", "can/event",
             }
         }
     });
-    $("#navbarSearchbox").html(
-        can.stache("<nav-search-box></nav-search-box>")()
-    );
 });
