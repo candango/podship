@@ -1,0 +1,29 @@
+<div id="searchComponent">
+<form class="navbar-form navbar-right" role="search">
+    <div id="searchDropdown" class="btn-group" role="group">
+        <input type="text" id="searchQuery" data-toggle="dropdown" class="form-control dropdown-toggle" placeholder="Search">
+        <div class="dropdown-menu dropdown-menu-left dropdown-search" role="menu">
+            <div class="list-group">
+                {{#hasResults}}
+                    {{#each results}}
+                        <a href="#" class="list-group-item">
+                            <img src="{{{img}}}"> {{{label}}}
+                        </a>
+                    {{/each}}
+                {{/hasResults}}
+                {{#noContacts}}
+                    <a href="#" class="list-group-item">
+                        <h4 class="list-group-item-heading">List group item heading</h4>
+                        <p class="list-group-item-text">...</p>
+                    </a>
+                {{/noContacts}}
+                {{#isLoading}}
+                    <div href="#" class="list-group-item text-center">
+                        <p class="list-group-item-text">Loading...</p>
+                    </div>
+                {{/isLoading}}
+            </div>
+        </div>
+    </div>
+</form>
+</div>

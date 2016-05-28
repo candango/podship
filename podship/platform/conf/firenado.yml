@@ -1,0 +1,36 @@
+app:
+  component: platform_test
+  data:
+    sources:
+        # Set here references from sources defined on data.sources
+  pythonpath: ..
+  port: 8888
+
+data:
+  sources:
+
+
+components:
+  - id: platform_test
+    class: podship.platform.app.PlatformTestComponent
+    enabled: true
+  - id: assets
+    enabled: true
+  #- id: admin
+  #  enabled: true
+  - id: info
+    enabled: true
+
+log:
+  level: WARNING
+
+# Session types could be:
+# file or redis.
+session:
+  type: file
+  enabled: false
+  # Redis session handler configuration
+  #data:
+    #source: session
+  # File session handler related configuration
+  # path: /tmp
