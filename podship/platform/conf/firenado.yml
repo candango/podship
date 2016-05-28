@@ -12,7 +12,7 @@ data:
 
 components:
   - id: platform_test
-    class: diasporapy.platform.app.PlatformTestComponent
+    class: podship.platform.app.PlatformTestComponent
     enabled: true
   - id: assets
     enabled: true
