@@ -13,3 +13,5 @@ WTForms-Tornado==0.0.2
 WTForms-JSON == 0.2.10
 jsonschema==2.5.1
 pika == 0.10.0
+commonmark=0.6.4
+opengraph==0.5
