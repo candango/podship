@@ -21,7 +21,7 @@ data:
 
 components:
   - id: engine
-    class: podship.engine.application.EngineComponent
+    class: podship.engine.app.EngineComponent
     enabled: true
   #- id: account
   #  class: diasporapy.engine.components.account.AccountComponent
