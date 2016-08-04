@@ -1,6 +1,7 @@
-master: default
-#slaves:
-instances:
-  - name: default
-    host: localhost
-    port: 8007
+#
+# Podship Engine configuration file
+#
+
+# Number of processes spawned
+processes: 2
+
