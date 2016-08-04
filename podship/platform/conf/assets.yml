@@ -1,7 +1,0 @@
-root: ..
-bower:
-  dependencies:
-    - name: "bower_components"
-      version: "0.12.7"
-      handler: "/vendor/(.*)"
-      path: "."
