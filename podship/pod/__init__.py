@@ -32,10 +32,10 @@ class PodComponent(firenado.tornadoweb.TornadoComponent):
         super(PodComponent, self).__init__(name, application)
         self.ping_engine = None
         self.security_conf = None
-        self.master_engine_available = False
+        self.master_gateway_available = False
         self.project_root = os.path.abspath(
                 os.path.join(os.path.dirname(__file__), '..'))
-        self.engines = {}
+        self.gateways = {}
 
     def get_handlers(self):
         return [
@@ -48,53 +48,54 @@ class PodComponent(firenado.tornadoweb.TornadoComponent):
         logger.info('Initializing pod component')
         self.security_conf = load_yaml_config_file(
             os.path.join(self.project_root, 'conf', 'security.yml'))
-        engine_conf = load_yaml_config_file(
+        gateway_conf = load_yaml_config_file(
             os.path.join(self.project_root, 'conf', 'engine.yml'))
-        master_engine = engine_conf['master']
-        for instance in engine_conf['instances']:
-            if master_engine == instance['name']:
-                self.engines['master'] = instance
-            self.engines[instance['name']] = instance
+        print(gateway_conf)
+        master_gateway = gateway_conf['gateway']['master']
+        for instance in gateway_conf['gateway']['instances']:
+            if master_gateway == instance['name']:
+                self.gateways['master'] = instance
+            self.gateways[instance['name']] = instance
         self.ping_engine = tornado.ioloop.PeriodicCallback(
                 self.ping_engine_callback, 30000)
         self.ping_engine_callback()
         logger.info('Pod component initialized')
 
-    def get_engine_url(self, name):
-        engine = self.engines[name]
-        return 'http://%s:%s' % (engine['host'], engine['port'])
+    def get_gateway_url(self, name):
+        gateway = self.gateways[name]
+        return 'http://%s:%s' % (gateway['host'], gateway['port'])
 
     def ping_engine_callback(self):
         from tornado import escape
         logger.debug('Pinging engine')
         self.ping_engine.stop()
         http_client = httpclient.HTTPClient()
-        engine_url = '%s/api/v1/status/%s' % (
-            self.get_engine_url('master'), 'ping')
+        gateway_url = '%s/api/v1/status/%s' % (
+            self.get_gateway_url('master'), 'ping')
 
         # TODO: get data from the config file
         data = escape.json_encode({'host': 'pod.candango.org', 'port': '8006'})
 
         try:
             response = http_client.fetch(httpclient.HTTPRequest(
-                    url=engine_url, method='POST', body=data))
+                    url=gateway_url, method='POST', body=data))
             print(response.body)
-            self.master_engine_available = True
-            logger.debug("Master engine is available")
+            self.master_gateway_available = True
+            logger.debug("Master gateway_url is available")
         except httpclient.HTTPError as e:
             # HTTPError is raised for non-200 responses; the response
             # can be found in e.response.
             logger.error("Error: %s" % str(e))
-            self.master_engine_available = False
+            self.master_gateway_available = False
         except Exception as e:
             # Other errors are possible, such as IOError.
             logger.error("Error: %s" % str(e))
             http_client.close()
-            self.master_engine_available = False
+            self.master_gateway_available = False
         self.ping_engine.start()
 
     def shutdown(self):
-        self.master_engine_available = False
+        self.master_gateway_available = False
         logger.info('Shutting down pod component')
         self.ping_engine.stop()
         logger.info('Pod component shutdown')

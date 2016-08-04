@@ -5,10 +5,3 @@
 # Number of processes spawned
 processes: 2
 
-gateway:
-  master: default
-  #slaves:
-  instances:
-    - name: default
-      host: localhost
-      port: 8007
