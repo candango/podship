@@ -7,7 +7,7 @@ pyyaml==3.11
 bcrypt==2.0.0
 passlib==1.6.5
 six==1.10.0
-pycrypto==2.6.1
+pycrypto==2.7a1
 validate_email==1.3
 WTForms-Tornado==0.0.2
 WTForms-JSON == 0.2.10
